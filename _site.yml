@@ -1,8 +1,8 @@
-name: "analsys.markdown"
-title: "Biodiversity analysis"
+name: "."
+title: "Biodiversity data analysis"
 description: |
-  Biodiversity analysis
-output_dir: "_site"
+  Biodiversity data analysis
+output_dir: "docs"
 navbar:
   right:
     - text: "Home"
