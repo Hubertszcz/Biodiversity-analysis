@@ -1,0 +1,9 @@
+---
+title: "MothBox"
+description: |
+  Automated light trap for moths and other nocturnal insects
+output:
+    distill::distill_article:
+      toc: true
+      toc_depth: 3
+---

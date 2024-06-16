@@ -1,0 +1,9 @@
+---
+title: "Bird Point Counts"
+description: |
+  Traditional morning point counts
+output:
+    distill::distill_article:
+      toc: true
+      toc_depth: 3
+---

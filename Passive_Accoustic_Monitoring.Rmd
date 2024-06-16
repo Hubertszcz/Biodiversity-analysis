@@ -1,0 +1,9 @@
+---
+title: "Passive Accoustic Monitoring"
+description: |
+  Audiomoth recordings for bird richness
+output:
+    distill::distill_article:
+      toc: true
+      toc_depth: 3
+---

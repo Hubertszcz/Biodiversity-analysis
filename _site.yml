@@ -4,9 +4,46 @@ description: |
   Biodiversity data analysis
 output_dir: "docs"
 navbar:
+  logo:
+    image: media/Symphypleona.jpg
+    href: index.html
+  source_url: true
+  title: ""
+  left:
   right:
-    - text: "Home"
+  # - text: "Home"
+    - icon: fa-home
       href: index.html
-    - text: "About"
-      href: about.html
+    - text: "Insects"
+      menu:
+        - text: "Soil Fauna"
+          href: Soil_Fauna.html
+        - text: "MothBox"
+          href: MothBox.html
+    - text: "Plants"
+      menu:
+        - text: "Gentry Transects"
+          href: Gentry_Transects.html
+        - text: "Invasive Plants"
+          href: Invasive_Plants.html
+        - text: "Deadwood"
+          href: Deadwood.html 
+    - text: "Birds"
+      menu:
+        - text: "Bird Point Counts"
+          href: Bird_Point_Counts.html
+        - text: "Passive Accoustic Monitoring"
+          href: Passive_Accoustic_Monitoring.html  
+        - text: "Soundscapes"
+          href: Soundscapes.html  
+    - text: "Mammals"
+      menu:
+        - text: "Camera Traps"
+          href: Camera_Traps.html
+        - text: "Transects"
+          href: Transects.html          
+          
+    - icon: fa-github fa-lg
+      href: https://github.com/Hubertszcz/Biodiversity-analysis      
+       
 output: distill::distill_article

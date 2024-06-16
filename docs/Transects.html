@@ -88,29 +88,29 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 
   <!--radix_placeholder_meta_tags-->
-  <title>Biodiversity data analysis</title>
+  <title>Biodiversity data analysis: Transects</title>
 
-  <meta property="description" itemprop="description" content="Data cleaning and analysis workflows for 2024 Azuero Biodiversity Monitoring Campaign"/>
+  <meta property="description" itemprop="description" content="Walked transects for mammals (and iguanas)"/>
 
 
 
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-  <meta property="og:title" content="Biodiversity data analysis"/>
+  <meta property="og:title" content="Biodiversity data analysis: Transects"/>
   <meta property="og:type" content="article"/>
-  <meta property="og:description" content="Data cleaning and analysis workflows for 2024 Azuero Biodiversity Monitoring Campaign"/>
+  <meta property="og:description" content="Walked transects for mammals (and iguanas)"/>
   <meta property="og:locale" content="en_US"/>
   <meta property="og:site_name" content="Biodiversity data analysis"/>
 
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
-  <meta property="twitter:title" content="Biodiversity data analysis"/>
-  <meta property="twitter:description" content="Data cleaning and analysis workflows for 2024 Azuero Biodiversity Monitoring Campaign"/>
+  <meta property="twitter:title" content="Biodiversity data analysis: Transects"/>
+  <meta property="twitter:description" content="Walked transects for mammals (and iguanas)"/>
 
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","output","site"]}},"value":[{"type":"character","attributes":{},"value":["Biodiversity data analysis"]},{"type":"character","attributes":{},"value":["Data cleaning and analysis workflows for 2024 Azuero Biodiversity Monitoring Campaign\n"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["includes","toc"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["in_header"]}},"value":[{"type":"character","attributes":{},"value":["media/banner.html"]}]},{"type":"logical","attributes":{},"value":[true]}]}]},{"type":"character","attributes":{},"value":["distill::distill_website"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","output"]}},"value":[{"type":"character","attributes":{},"value":["Transects"]},{"type":"character","attributes":{},"value":["Walked transects for mammals (and iguanas)\n"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["toc","toc_depth"]}},"value":[{"type":"logical","attributes":{},"value":[true]},{"type":"integer","attributes":{},"value":[3]}]}]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
@@ -2078,19 +2078,6 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <script src="site_libs/distill-2.2.21/template.v2.js"></script>
   <!--radix_placeholder_site_in_header-->
   <!--/radix_placeholder_site_in_header-->
-  <!DOCTYPE html>
-  <html lang="en" dir="ltr">
-    <head>
-      <meta charset="utf-8">
-      <title></title>
-    </head>
-    <body>
-      <div class="article-header">
-        <img src="media/banner.jpg" class="article-banner" style="width: 100%;" alt="">
-      </div>
-      </a>
-    </body>
-  </html>
 
 
 </head>
@@ -2100,7 +2087,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Biodiversity data analysis","description":"Data cleaning and analysis workflows for 2024 Azuero Biodiversity Monitoring Campaign","authors":[]}
+{"title":"Transects","description":"Walked transects for mammals (and iguanas)","authors":[]}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2175,34 +2162,54 @@ Mammals
 <!--/radix_placeholder_site_before_body-->
 
 <div class="d-title">
-<h1>Biodiversity data analysis</h1>
+<h1>Transects</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
-<p><p>Data cleaning and analysis workflows for 2024 Azuero Biodiversity
-Monitoring Campaign</p></p>
+<p><p>Walked transects for mammals (and iguanas)</p></p>
 </div>
 
 
 <div class="d-article">
-<p>Initial data collection ran from January through March 2024, mostly
-around Venao, Azuero Peninsula, Panama. The 53 sampling points were
-distributed across 450 hectares, split between five different land use
-types: pasture, natural regeneration secondary forest, assisted
-regeneration (planted) secondary forest, teak plantation, and mature
-secondary forest.</p>
-<p>There were four primary objectives of this research:</p>
+<div class="d-contents d-contents-float">
+<nav class="l-text toc figcaption" id="TOC">
+<h3>Contents</h3>
 <ul>
-<li><p>Full-scale test of the biodiversity monitoring system I’ve been
-designing (monitoring diverse indices, systematically, at scale, in
-Azuero)</p></li>
-<li><p>Establish the amount of time and money to implement each
-protocol.</p></li>
-<li><p>Look at the effect of different reforestation pathways on
-biodiversity recovery</p></li>
-<li><p>Pilot monitoring for Verra’s SDVista Nature Credit
-system</p></li>
+<li><a href="#r-markdown" id="toc-r-markdown">R Markdown</a></li>
+<li><a href="#including-plots" id="toc-including-plots">Including
+Plots</a></li>
 </ul>
-<div class="sourceCode" id="cb1"><pre
+</nav>
+</div>
+<h2 id="r-markdown">R Markdown</h2>
+<p>This is an R Markdown document. Markdown is a simple formatting
+syntax for authoring HTML, PDF, and MS Word documents. For more details
+on using R Markdown see <a href="http://rmarkdown.rstudio.com"
+class="uri">http://rmarkdown.rstudio.com</a>.</p>
+<p>When you click the <strong>Knit</strong> button a document will be
+generated that includes both content as well as the output of any
+embedded R code chunks within the document. You can embed an R code
+chunk like this:</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>cars</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>     speed           dist       
+ Min.   : 4.0   Min.   :  2.00  
+ 1st Qu.:12.0   1st Qu.: 26.00  
+ Median :15.0   Median : 36.00  
+ Mean   :15.4   Mean   : 42.98  
+ 3rd Qu.:19.0   3rd Qu.: 56.00  
+ Max.   :25.0   Max.   :120.00  </code></pre>
+</div>
+<h2 id="including-plots">Including Plots</h2>
+<p>You can also embed plots, for example:</p>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="Transects_files/figure-html5/pressure-1.png" width="624" /></p>
+</div>
+<p>Note that the <code>echo = FALSE</code> parameter was added to the
+code chunk to prevent printing of the R code that generated the
+plot.</p>
+<div class="sourceCode" id="cb2"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

@@ -1,0 +1,9 @@
+---
+title: "Camera Traps"
+description: |
+  Motion-activated camera traps for mammals
+output:
+    distill::distill_article:
+      toc: true
+      toc_depth: 3
+---

@@ -1,0 +1,9 @@
+---
+title: "Gentry Transects"
+description: |
+  Gentry transects for tree richness
+output:
+    distill::distill_article:
+      toc: true
+      toc_depth: 3
+---

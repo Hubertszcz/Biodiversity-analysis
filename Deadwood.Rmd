@@ -1,0 +1,9 @@
+---
+title: "Deadwood"
+description: |
+ Fallen dead wood
+output:
+    distill::distill_article:
+      toc: true
+      toc_depth: 3
+---

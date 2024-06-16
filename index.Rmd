@@ -1,7 +1,12 @@
 ---
 title: "Biodiversity data analysis"
 description: |
-  Welcome to the website. I hope you enjoy it!
+  Data cleaning and analysis workflows for 2024 Azuero Biodiversity Monitoring Campaign
+output:
+  distill::distill_article:
+    includes:
+        in_header: media/banner.html
+    toc: true
 site: distill::distill_website
 
 ---
@@ -17,3 +22,16 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```
 
+Initial data collection ran from January through March 2024, mostly around Venao, Azuero Peninsula, Panama. The 53 sampling points were distributed across 450 hectares, split between five different land use types: pasture, natural regeneration secondary forest, assisted regeneration (planted) secondary forest, teak plantation, and mature secondary forest.
+
+![](media/gallery/First 450.jpg)
+
+There were four primary objectives of this research:
+
+- Full-scale test of the biodiversity monitoring system I’ve been designing (monitoring diverse indices, systematically, at scale, in Azuero)
+
+- Establish the amount of time and money to implement each protocol.
+
+- Look at the effect of different reforestation pathways on biodiversity recovery
+
+- Pilot monitoring for Verra’s SDVista Nature Credit system
