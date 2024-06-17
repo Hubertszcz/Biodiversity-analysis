@@ -7,3 +7,40 @@ output:
       toc: true
       toc_depth: 3
 ---
+
+I have about 135 hours of total acoustic recordings per point, collected with audiomoths.
+
+The first ~50 hours of recordings are with a schedule I had intended to collect 120 hours over 30 days, but the rechargable batteries did not hold up. These were recorded with this schedule: 4:00-12:00, 16:00-24:00; record 15 seconds/sleep 45 seconds; 48 kHz. 
+
+The next ~85 hours per point were collected more or less continuously (0:00-24:00; record 895 seconds/sleep 5 seconds; 48 kHz). I chose to break this up into 15 minute chunks so that the files will be easier to move around. These were collected using alkaline batteries, and not hitting 120 hours was also a disappointment.
+
+I also have ~4 hours of recordings (17:00-24:00; record 15/sleep 165; 384 kHz) for [18] points, intended for bat monitoring. Will deal with that later.
+
+Note for when I start analyzing the data from Ponterra and supplemental Pro Eco Azuero data: the schedule was back to 15 seconds a minute for part of the day (4:00-12:00, 16:00-24:00; record 15 seconds/sleep 45 seconds; 48 kHz). This time we used alkaline batteries and enabled energy saver mode.
+
+---
+
+To get bird richness data from these recordings I will use [BirdNet](https://birdnet.cornell.edu/).
+
+
+> **Excerpt from email from Tim Boycott, who is doing his PhD at the Cornell Lab of Ornithology:**
+>
+>We run our audio data through BirdNet using the command line interface. We leave default sensitivity (1) and overlap (0) and passed a defined list of ~120 species. For 9TB of audio data from last season, it took about a week to run on a good but not crazy powerful laptop.
+>
+>We then go through a validation process (expert ID of a subset of detections) to impart a confidence level on BirdNet scores. This was an approach developed by Connor Wood (one of our collaborators) and Stefan Kahl (the developer of BirdNet), so we feel pretty good about this route. I'm attaching their paper, a tutorial with example data, and our own R markdown that we developed for our project on grassland birds in NY.
+>
+>In a nutshell, for each species, we validate 100 detections (using the 3 second audio segments produced by the BirdNet workflow) with BirdNet scores between 0.1-1.0 and another 50 detections with scores between 0.85-1.0. This tends to be enough to fit a logistic regression and get a 95% CL on score cutoff levels for each species. We then filter the entire raw dataset by those 95% CL BirdNet scores and retain only detections above those scores for downstream analyses.
+>
+>One important thing to remember is that once you use a current version of BirdNet in this process, you shouldn't update to a new version, as the algorithm changes will produce different scores, requiring revalidating of the data. However, once you go through this validation step for one season of data, under a specific experimental design, in a given set of locations, you arguably don't need to revalidate in subsequent years.
+>
+
+
+Here is the paper he referenced:
+
+```{r echo=FALSE}
+xfun::embed_file('media/wood-kahl-2024-guidelines-for-birdnet-scores.pdf')
+```  
+
+
+
+So, first step is to figure out how to run birdnet with command line: https://github.com/kahst/BirdNET-Analyzer?tab=readme-ov-file#usage-cli

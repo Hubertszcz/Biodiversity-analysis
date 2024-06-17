@@ -35,3 +35,16 @@ There were four primary objectives of this research:
 - Look at the effect of different reforestation pathways on biodiversity recovery
 
 - Pilot monitoring for Verra’s SDVista Nature Credit system
+
+
+Here are some data analysis goals:
+
+- Clean up data so that I have richness (and abundance where relevant) values for each protocol at each sampling point, and holistically
+
+- Create accumulation/rarefaction curves to see how effectively I sampled
+
+- Create a summary metric for holistic biodiversity at each sampling point.
+
+- Determine the cost per point of implementing each protocol
+
+- Rank biodiversity indicators for how much time and specialized knowledge is required for their implementation.

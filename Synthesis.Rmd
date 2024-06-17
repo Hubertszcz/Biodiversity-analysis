@@ -1,0 +1,11 @@
+---
+title: "Synthesis"
+description: |
+  Putting it all together...
+output:
+    distill::distill_article:
+      toc: true
+      toc_depth: 3
+---
+
+I will use this page to document combining the various biodiversity indicators I measured; creating a metric of holistic biodiversity, modelling compunity composition, and cost-effectiveness analyses.
