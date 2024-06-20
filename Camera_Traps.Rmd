@@ -12,5 +12,4 @@ Luckily processing camera trap data has been made much easier with [Wildlife Ins
 
 There are great tutorials on how to use Wildlife Insights already.
 
-<iframe src="https://youtu.be/LiWZVpqzumc" data-external= "1" > </iframe>
-
+![](https://youtu.be/LiWZVpqzumc)
