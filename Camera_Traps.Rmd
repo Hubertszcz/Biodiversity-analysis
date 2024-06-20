@@ -7,3 +7,10 @@ output:
       toc: true
       toc_depth: 3
 ---
+
+Luckily processing camera trap data has been made much easier with [Wildlife Insights](https://www.wildlifeinsights.org/).
+
+There are great tutorials on how to use Wildlife Insights already.
+
+<iframe src="https://youtu.be/LiWZVpqzumc" data-external= "1" > </iframe>
+
