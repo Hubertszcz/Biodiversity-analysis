@@ -10,6 +10,51 @@ output:
 
 Luckily processing camera trap data has been made much easier with [Wildlife Insights](https://www.wildlifeinsights.org/).
 
-There are great tutorials on how to use Wildlife Insights already.
+There are great tutorials on how to use Wildlife Insights already: https://youtu.be/LiWZVpqzumc
 
-![](https://youtu.be/LiWZVpqzumc)
+Here is the full guide:
+
+```{r echo=FALSE}
+xfun::embed_file('media/Wildlife Insights Getting Started Guide - ENG - Shared.pdf')
+```  
+
+Data analysis starts with having all of the photos organized into folders by deployment (location and camera used), and having a table with the metadata deployment details. To fill out this metadata table and double check that everything is correct I went through all of the field sheets for deployment and collection, making sure that collection dates on the sheets match up with the folder names. I then went into the timelapse folder from each camera deployment and noted the date of the last timelapse marker (to confirm that the camera traps were operating until the collection date). As was noted during collection of AZCAM05, it had been turned off at a previous visit and not turned back on. The timelapse markers show the actual date range the cameras were operating.
+
+
+<details markdown="1">
+<summary><strong>Click here</strong> for notes on camera deployment dates</summary>
+
+```{r setup, message=FALSE, results = 'hide'}
+
+#AZCAM12 had a messed up schedule. This camera was originally placed at a different location (the point was unnecessarily moved when first established, then moved back to original position). The timelapse (and photos taken), include the first location (which will be excluded from analysis). The set date in the metadata is the day the camera was moved to its final position. However, the timelapse shows that the camera was not in continuous operation. This is because this camera was positioned on a tree that was too thin and moved in the wind, resulting in 38,000 photos. The actual dates of operation for AZCAM12 are: 20240202-20240211, 20240304-20240311
+
+#AZCAM23, another one placed on too skinny a tree that collected thousands of photos, cut out a few days before the collection date.
+
+#AZCAM25 was programmed with the wrong date, behind one month. So, it was set in the field on the 2nd of February, but the first timelapse marker date is from the 2nd of January. Consequently, because February this year has 2 fewer days than January, the timelapse maker end date is 10th of February, which corresponds to the actual collection date of 12th of March.
+
+#AZCAM38 cut out a few days early. Maybe from many photos? (it was in a horse pasture, 6900 photos)
+
+```
+
+</details>
+
+Here is the metadata table:
+
+```{r eval=T, include=T, message=FALSE,}
+camtrap_metadata <- read.csv("media/data/camtrap_metadata.csv",header = T, sep = ",")
+
+library(DT)
+
+datatable(camtrap_metadata, rownames = FALSE, width = "100%", colnames = c("camera", "point", "finca", "sd.card", "set.date", "collect.date", "timelapse.end", "range", "program", "hard.drive1", "folder", "notes"),
+          caption =
+            htmltools::tags$caption(
+              style = "caption-side: bottom; text-align: left;",
+              "Table: ",
+              htmltools::em("blob variables and Categories")),
+          extensions = "Buttons",
+          options = list(columnDefs =
+                           list(list(className = "dt-left", targets = 0)),
+                         dom = "Blfrtip", pageLength = 10,
+                         lengthMenu = c(10, 20, 40, 70),
+                         buttons = c("csv", "copy")))
+```

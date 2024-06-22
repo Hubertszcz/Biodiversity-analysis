@@ -6,7 +6,7 @@
       "description": "Some additional details about the website",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2024-06-20T08:48:17-08:00"
+      "last_modified": "2024-06-21T11:28:08-08:00"
     },
     {
       "path": "Bird_Point_Counts.html",
@@ -14,15 +14,15 @@
       "description": "Traditional morning point counts\n",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2024-06-20T08:48:21-08:00"
+      "last_modified": "2024-06-21T11:28:09-08:00"
     },
     {
       "path": "Camera_Traps.html",
       "title": "Camera Traps",
       "description": "Motion-activated camera traps for mammals\n",
       "author": [],
-      "contents": "\r\nLuckily processing camera trap data has been made much easier with Wildlife Insights.\r\nThere are great tutorials on how to use Wildlife Insights\r\nalready.\r\n\r\n\r\n\r\n\r\n",
-      "last_modified": "2024-06-20T08:48:25-08:00"
+      "contents": "\r\nLuckily processing camera trap data has been made much easier with Wildlife Insights.\r\nThere are great tutorials on how to use Wildlife Insights already: https://youtu.be/LiWZVpqzumc\r\nHere is the full guide:\r\n\r\nDownload Wildlife Insights Getting Started Guide - ENG - Shared.pdf\r\n\r\nData analysis starts with having all of the photos organized into\r\nfolders by deployment (location and camera used), and having a table\r\nwith the metadata deployment details. To fill out this metadata table\r\nand double check that everything is correct I went through all of the\r\nfield sheets for deployment and collection, making sure that collection\r\ndates on the sheets match up with the folder names. I then went into the\r\ntimelapse folder from each camera deployment and noted the date of the\r\nlast timelapse marker (to confirm that the camera traps were operating\r\nuntil the collection date). As was noted during collection of AZCAM05,\r\nit had been turned off at a previous visit and not turned back on. The\r\ntimelapse markers show the actual date range the cameras were\r\noperating.\r\nClick here for notes on camera deployment dates\r\n\r\n\r\n#AZCAM12 had a messed up schedule. This camera was originally placed at a different location (the point was unnecessarily moved when first established, then moved back to original position). The timelapse (and photos taken), include the first location (which will be excluded from analysis). The set date in the metadata is the day the camera was moved to its final position. However, the timelapse shows that the camera was not in continuous operation. This is because this camera was positioned on a tree that was too thin and moved in the wind, resulting in 38,000 photos. The actual dates of operation for AZCAM12 are: 20240202-20240211, 20240304-20240311\r\n\r\n#AZCAM23, another one placed on too skinny a tree that collected thousands of photos, cut out a few days before the collection date.\r\n\r\n#AZCAM25 was programmed with the wrong date, behind one month. So, it was set in the field on the 2nd of February, but the first timelapse marker date is from the 2nd of January. Consequently, because February this year has 2 fewer days than January, the timelapse maker end date is 10th of February, which corresponds to the actual collection date of 12th of March.\r\n\r\n#AZCAM38 cut out a few days early. Maybe from many photos? (it was in a horse pasture, 6900 photos)\r\n\r\n\r\nHere is the metadata table:\r\n\r\n\r\ncamtrap_metadata <- read.csv(\"media/data/camtrap_metadata.csv\",header = T, sep = \",\")\r\n\r\nlibrary(DT)\r\n\r\ndatatable(camtrap_metadata, rownames = FALSE, width = \"100%\", colnames = c(\"camera\", \"point\", \"finca\", \"sd.card\", \"set.date\", \"collect.date\", \"timelapse.end\", \"range\", \"program\", \"hard.drive1\", \"folder\", \"notes\"),\r\n          caption =\r\n            htmltools::tags$caption(\r\n              style = \"caption-side: bottom; text-align: left;\",\r\n              \"Table: \",\r\n              htmltools::em(\"blob variables and Categories\")),\r\n          extensions = \"Buttons\",\r\n          options = list(columnDefs =\r\n                           list(list(className = \"dt-left\", targets = 0)),\r\n                         dom = \"Blfrtip\", pageLength = 10,\r\n                         lengthMenu = c(10, 20, 40, 70),\r\n                         buttons = c(\"csv\", \"copy\")))\r\n\r\n\r\n\r\n\r\n\r\n\r\n",
+      "last_modified": "2024-06-21T11:31:54-08:00"
     },
     {
       "path": "Deadwood.html",
@@ -30,7 +30,7 @@
       "description": "Fallen dead wood\n",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2024-06-20T08:48:27-08:00"
+      "last_modified": "2024-06-21T11:28:35-08:00"
     },
     {
       "path": "Gentry_Transects.html",
@@ -38,7 +38,7 @@
       "description": "Gentry transects for tree richness\n",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2024-06-20T08:48:30-08:00"
+      "last_modified": "2024-06-21T11:28:36-08:00"
     },
     {
       "path": "index.html",
@@ -46,7 +46,7 @@
       "description": "Data cleaning and analysis workflows for 2024 Azuero Biodiversity Monitoring Campaign\n",
       "author": [],
       "contents": "\r\n      \r\n        \r\n      \r\n    \r\n  ",
-      "last_modified": "2024-06-20T08:48:34-08:00"
+      "last_modified": "2024-06-21T11:28:37-08:00"
     },
     {
       "path": "Invasive_Plants.html",
@@ -54,7 +54,7 @@
       "description": "Invasive plant transects\n",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2024-06-20T08:48:37-08:00"
+      "last_modified": "2024-06-21T11:28:38-08:00"
     },
     {
       "path": "MothBox.html",
@@ -62,7 +62,7 @@
       "description": "Automated light trap for moths and other nocturnal insects\n",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2024-06-20T08:48:41-08:00"
+      "last_modified": "2024-06-21T11:28:38-08:00"
     },
     {
       "path": "Passive_Accoustic_Monitoring.html",
@@ -70,7 +70,7 @@
       "description": "Audiomoth recordings for bird richness\n",
       "author": [],
       "contents": "\r\nI have about 135 hours of total acoustic recordings per point,\r\ncollected with audiomoths.\r\nThe first ~50 hours of recordings are with a schedule I had intended\r\nto collect 120 hours over 30 days, but the rechargable batteries did not\r\nhold up. These were recorded with this schedule: 4:00-12:00,\r\n16:00-24:00; record 15 seconds/sleep 45 seconds; 48 kHz.\r\nThe next ~85 hours per point were collected more or less continuously\r\n(0:00-24:00; record 895 seconds/sleep 5 seconds; 48 kHz). I chose to\r\nbreak this up into 15 minute chunks so that the files will be easier to\r\nmove around. These were collected using alkaline batteries, and not\r\nhitting 120 hours was also a disappointment.\r\nI also have ~4 hours of recordings (17:00-24:00; record 15/sleep 165;\r\n384 kHz) for [18] points, intended for bat monitoring. Will deal with\r\nthat later.\r\nNote for when I start analyzing the data from Ponterra and\r\nsupplemental Pro Eco Azuero data: the schedule was back to 15 seconds a\r\nminute for part of the day (4:00-12:00, 16:00-24:00; record 15\r\nseconds/sleep 45 seconds; 48 kHz). This time we used alkaline batteries\r\nand enabled energy saver mode.\r\nTo get bird richness data from these recordings I will use BirdNet.\r\n\r\nExcerpt from email from Tim Boycott, who is doing his PhD at\r\nthe Cornell Lab of Ornithology:\r\nWe run our audio data through BirdNet using the command line\r\ninterface. We leave default sensitivity (1) and overlap (0) and passed a\r\ndefined list of ~120 species. For 9TB of audio data from last season, it\r\ntook about a week to run on a good but not crazy powerful laptop.\r\nWe then go through a validation process (expert ID of a subset of\r\ndetections) to impart a confidence level on BirdNet scores. This was an\r\napproach developed by Connor Wood (one of our collaborators) and Stefan\r\nKahl (the developer of BirdNet), so we feel pretty good about this\r\nroute. I’m attaching their paper, a tutorial with example data, and our\r\nown R markdown that we developed for our project on grassland birds in\r\nNY.\r\nIn a nutshell, for each species, we validate 100 detections (using\r\nthe 3 second audio segments produced by the BirdNet workflow) with\r\nBirdNet scores between 0.1-1.0 and another 50 detections with scores\r\nbetween 0.85-1.0. This tends to be enough to fit a logistic regression\r\nand get a 95% CL on score cutoff levels for each species. We then filter\r\nthe entire raw dataset by those 95% CL BirdNet scores and retain only\r\ndetections above those scores for downstream analyses.\r\nOne important thing to remember is that once you use a current\r\nversion of BirdNet in this process, you shouldn’t update to a new\r\nversion, as the algorithm changes will produce different scores,\r\nrequiring revalidating of the data. However, once you go through this\r\nvalidation step for one season of data, under a specific experimental\r\ndesign, in a given set of locations, you arguably don’t need to\r\nrevalidate in subsequent years.\r\n\r\nHere is the paper he referenced:\r\n\r\nDownload wood-kahl-2024-guidelines-for-birdnet-scores.pdf\r\n\r\nSo, first step is to figure out how to run birdnet with command line:\r\nhttps://github.com/kahst/BirdNET-Analyzer?tab=readme-ov-file#usage-cli\r\n\r\n\r\n\r\n",
-      "last_modified": "2024-06-20T08:48:48-08:00"
+      "last_modified": "2024-06-21T11:28:41-08:00"
     },
     {
       "path": "Soil_Fauna.html",
@@ -78,7 +78,7 @@
       "description": "Tullgren Extraction of Soil Meso and Macro Fauna\n",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2024-06-20T08:48:52-08:00"
+      "last_modified": "2024-06-21T11:28:42-08:00"
     },
     {
       "path": "Soundscapes.html",
@@ -86,7 +86,7 @@
       "description": "Audiomoth recordings for Soundscapes\n",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2024-06-20T08:48:54-08:00"
+      "last_modified": "2024-06-21T11:28:43-08:00"
     },
     {
       "path": "Synthesis.html",
@@ -94,7 +94,7 @@
       "description": "Putting it all together...\n",
       "author": [],
       "contents": "\r\nI will use this page to document combining the various biodiversity\r\nindicators I measured; creating a metric of holistic biodiversity,\r\nmodelling compunity composition, and cost-effectiveness analyses.\r\n\r\n\r\n\r\n",
-      "last_modified": "2024-06-20T08:48:58-08:00"
+      "last_modified": "2024-06-21T11:28:44-08:00"
     },
     {
       "path": "Transects.html",
@@ -102,7 +102,7 @@
       "description": "Walked transects for mammals (and iguanas)\n",
       "author": [],
       "contents": "\r\n\r\nContents\r\nR Markdown\r\nIncluding\r\nPlots\r\n\r\nR Markdown\r\nThis is an R Markdown document. Markdown is a simple formatting\r\nsyntax for authoring HTML, PDF, and MS Word documents. For more details\r\non using R Markdown see http://rmarkdown.rstudio.com.\r\nWhen you click the Knit button a document will be\r\ngenerated that includes both content as well as the output of any\r\nembedded R code chunks within the document. You can embed an R code\r\nchunk like this:\r\n\r\n\r\nsummary(cars)\r\n\r\n     speed           dist       \r\n Min.   : 4.0   Min.   :  2.00  \r\n 1st Qu.:12.0   1st Qu.: 26.00  \r\n Median :15.0   Median : 36.00  \r\n Mean   :15.4   Mean   : 42.98  \r\n 3rd Qu.:19.0   3rd Qu.: 56.00  \r\n Max.   :25.0   Max.   :120.00  \r\n\r\nIncluding Plots\r\nYou can also embed plots, for example:\r\n\r\n\r\n\r\nNote that the echo = FALSE parameter was added to the\r\ncode chunk to prevent printing of the R code that generated the\r\nplot.\r\n\r\n\r\n\r\n",
-      "last_modified": "2024-06-20T08:49:02-08:00"
+      "last_modified": "2024-06-21T11:28:45-08:00"
     }
   ],
   "collections": []
