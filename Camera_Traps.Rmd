@@ -40,27 +40,6 @@ Data analysis starts with having all of the photos organized into folders by dep
 
 Here is the metadata table:
 
-```{r eval=T, include=T, message=FALSE,}
-camtrap_metadata <- read.csv("media/working directory/data/camtrap_metadata.csv",header = T, sep = ",")
-
-library(DT)
-
-datatable(camtrap_metadata, rownames = FALSE, width = "100%", colnames = c("camera", "point", "finca", "sd.card", "set.date", "collect.date", "timelapse.end", "range", "program", "hard.drive1", "folder", "notes"),
-          caption =
-            htmltools::tags$caption(
-              style = "caption-side: bottom; text-align: left;",
-              "Table: ",
-              htmltools::em("blob variables and Categories")),
-          extensions = "Buttons",
-          options = list(columnDefs =
-                           list(list(className = "dt-left", targets = 0)),
-                         dom = "Blfrtip", pageLength = 10,
-                         lengthMenu = c(10, 20, 40, 70),
-                         buttons = c("csv", "copy")))
-```
-
-
-even simpler: 
 
 ```{r eval=T, include=T, message=FALSE, echo=FALSE}
 camtrap_metadata <- read.csv("media/working directory/data/camtrap_metadata.csv",header = T, sep = ",")
@@ -75,7 +54,7 @@ datatable(camtrap_metadata, extensions = "Buttons", options = list(dom = "Blfrti
 #            htmltools::tags$caption(
 #              style = "caption-side: bottom; text-align: left;",
 #              "Table: ",
-#              htmltools::em("blob variables and Categories")),
+#              htmltools::em("camera trap metadata")),
 #          extensions = "Buttons",
 #          options = list(columnDefs =
 #                           list(list(className = "dt-left", targets = 0)),

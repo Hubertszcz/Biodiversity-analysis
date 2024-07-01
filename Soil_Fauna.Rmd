@@ -41,10 +41,11 @@ xfun::embed_file('media/working directory/data/Soil invert data.csv')
 ```  
 
 
+
 This spreadsheet is a combination of the invertebrate abundance data and the collection/extraction metadata, in long format. I will start with some clean up and organization. This involves making sure that R reads my dates as dates, converting my data to long format, splitting the dataset in two (one with unknowns and one without), correcting abundance data for sample mass, and splitting the data into absolute and relative abundance. I use absolute abundance data for calculating diversity indices and relative abundance for community structure modelling. 
 
 <details markdown="1">
-<summary><strong>Click here</strong> for setup information.</summary>
+<summary><strong>Click here</strong> for code </summary>
 
 ```{r setup, message=FALSE, results = 'hide'}
 
@@ -57,6 +58,7 @@ library(tidyr)
 library(gridExtra)
 library('funrar')
 library(lubridate)
+library(viridis)
 
 ## Initial cleanup, organization
 
@@ -128,7 +130,7 @@ Next up I'll calculate richness, evenness, total abundance, and several diversit
 
 
 <details markdown="1">
-<summary><strong>Click here</strong> for setup information.</summary>
+<summary><strong>Click here</strong> for code </summary>
 ```{r, message=FALSE, results = 'hide'}
 library(vegan)
 
@@ -145,9 +147,170 @@ diversity.indices <- data.summary[,c(1:2,13:17)]
 ```
 </details>
 
-Here is a table with the results:
+Here's what that data looks like:
 
-```{r}
-knitr::kable(diversity.indices, format = "markdown")
+```{r, echo=FALSE}
+knitr::kable(diversity.indices[1:10, ], format = "markdown")
 
 ```
+
+Taxa is the number of unique taxa found in each sample (richness/alpha diversity), abundance is total (mass-corrected) abundance of soil fauna, J is Pielou's evenness (how evenly distributed abundance is between the taxa; species dominance rather than diversity), and Shannon and Simpson are two different diversity indices, ways of conceptualizing diversity that combine abundance and richness. The Simpson index is more heavily influenced by dominant species, while the Shannon index is more heavily influenced by rare species. Going forward I will use Shannon to represent diversity, but if we want we can easily swap in Simpson or something else. Note: sample 53 is anomalous. Never have I seen a mature forest sample with so few inverts. Maybe the reason will become apparent after soil chemistry analysis, or there was an error of some kind during extraction/sample processing.
+
+Let's summarize averages for each land use type:
+
+```{r, echo=FALSE}
+subset.mature <- subset(data.summary, land.use == "mature")
+subset.nat.regen <- subset(data.summary, land.use == "nat.regen")
+subset.reforestation <- subset(data.summary, land.use == "reforestation")
+subset.teak <- subset(data.summary, land.use == "teak")
+subset.pasture <- subset(data.summary, land.use == "pasture")
+
+
+land.use <- c('mature', 'nat.regen', 'reforestation', 'teak', 'pasture')
+taxa <- c(mean(subset.mature$taxa),
+          mean(subset.nat.regen$taxa), 
+          mean(subset.reforestation$taxa),      
+          mean(subset.teak$taxa),
+          mean(subset.pasture$taxa))
+abundance <- c(mean(subset.mature$abundance),
+          mean(subset.nat.regen$abundance), 
+          mean(subset.reforestation$abundance),      
+          mean(subset.teak$abundance),
+          mean(subset.pasture$abundance))
+J <- c(mean(subset.mature$J),
+          mean(subset.nat.regen$J), 
+          mean(subset.reforestation$J),      
+          mean(subset.teak$J),
+          mean(subset.pasture$J))
+shannon <- c(mean(subset.mature$shannon),
+          mean(subset.nat.regen$shannon), 
+          mean(subset.reforestation$shannon),      
+          mean(subset.teak$shannon),
+          mean(subset.pasture$shannon))
+simpson <- c(mean(subset.mature$simpson),
+          mean(subset.nat.regen$simpson), 
+          mean(subset.reforestation$simpson),      
+          mean(subset.teak$simpson),
+          mean(subset.pasture$simpson))
+
+mean.values <- data.frame(land.use, taxa, abundance, J, shannon, simpson)
+
+knitr::kable(mean.values, format = "markdown")
+```
+Now let's visualize it.
+
+
+### Total abundance 
+
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+
+##### Abundance
+ggplot(data=mean.values, aes(x=land.use, y=abundance, fill=land.use)) +
+  geom_bar(stat="identity", position=position_dodge(), aes(x = factor(land.use, level = land.use)), width = .5, show.legend = FALSE)+
+  #scale_fill_brewer(palette="Paired")+ 
+  labs(title="Total abundance of soil fauna", x="Land Use Type", y = "Mean abundance (count/1kg dry soil)")+
+  theme(text=element_text(family="Arial")) + 
+  scale_fill_viridis(discrete=TRUE, option="viridis", begin = .3,end = .75,)+
+  theme_minimal()+ theme(plot.title = element_text(hjust = 0.5))
+```
+
+Abundance data is corrected for mass to give values of density per 1000g dry soil. The soil moisture values are based on air-dried samples and mass was recorded with a kitchen scale (low resolution), so moisture is a potential source of error here.
+
+Moisture has a large influence on mass, and can vary considerably (30-50% in the wet season in my experience), so this is a considerable source of error.
+
+
+### Taxonomic Richness
+
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+
+##### Richness
+ggplot(data=mean.values, aes(x=land.use, y=taxa, fill=land.use)) +
+  geom_bar(stat="identity", position=position_dodge(), aes(x = factor(land.use, level = land.use)), width = .5, show.legend = FALSE)+
+  #scale_fill_brewer(palette="Paired")+ 
+  labs(title="Taxonomic richness of soil fauna", x="Land Use Type", y = "Ordinal taxonomic richness")+
+  theme(text=element_text(family="Arial")) + 
+  scale_fill_viridis(discrete=TRUE, option="viridis", begin = .3,end = .75,)+
+  theme_minimal()+ theme(plot.title = element_text(hjust = 0.5))
+```
+
+
+The low richness in teak is perhaps related to nutrient leaching and soil erosion ([Fernández-Moya et al 2014](https://www.sciencedirect.com/science/article/abs/pii/S0341816214002379), [Amponsah & Meyer 2008](https://www.tandfonline.com/doi/abs/10.1080/00103620009370442), [Boley et al 2009](https://www.sciencedirect.com/science/article/abs/pii/S0378112709001534)). Assessing biodiversity via richness has the caveat that rare species weigh pretty heavily on the metric. If a community has 100 individuals of one taxon but only one individual each for a further 9, then it will have a higher richness than a community composed of 8 taxa with 1 individuals each (a more diverse scenario).
+
+### Shannon Diversity
+
+
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+
+##### Shannon diversity
+ggplot(data=mean.values, aes(x=land.use, y=shannon, fill=land.use)) +
+  geom_bar(stat="identity", position=position_dodge(), aes(x = factor(land.use, level = land.use)), width = .5, show.legend = FALSE)+
+  #scale_fill_brewer(palette="Paired")+ 
+  labs(title="Shannon diversity of soil fauna", x="Land Use Type", y = "Shannon index")+
+  theme(text=element_text(family="Arial")) + 
+  scale_fill_viridis(discrete=TRUE, option="viridis", begin = .3,end = .75,)+
+  theme_minimal()+ theme(plot.title = element_text(hjust = 0.5))
+```
+
+
+These results are somewhat surprising - Mature forest had the greatest abundance and richness in my pilot study. As of 1.7.24 these results are based only on 25 sampling points, once I get the data for the remainder the story will be more complete. I also wonder if sample 53 is single-handedly skewing these results right now?
+
+Let's redo everything excluding sample 53:
+
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+subset.mature53 <- subset.mature[-c(1), ] 
+
+taxa53 <- c(mean(subset.mature53$taxa),
+          mean(subset.nat.regen$taxa), 
+          mean(subset.reforestation$taxa),      
+          mean(subset.teak$taxa),
+          mean(subset.pasture$taxa))
+abundance53 <- c(mean(subset.mature53$abundance),
+          mean(subset.nat.regen$abundance), 
+          mean(subset.reforestation$abundance),      
+          mean(subset.teak$abundance),
+          mean(subset.pasture$abundance))
+J53 <- c(mean(subset.mature53$J),
+          mean(subset.nat.regen$J), 
+          mean(subset.reforestation$J),      
+          mean(subset.teak$J),
+          mean(subset.pasture$J))
+shannon53 <- c(mean(subset.mature53$shannon),
+          mean(subset.nat.regen$shannon), 
+          mean(subset.reforestation$shannon),      
+          mean(subset.teak$shannon),
+          mean(subset.pasture$shannon))
+simpson53 <- c(mean(subset.mature53$simpson),
+          mean(subset.nat.regen$simpson), 
+          mean(subset.reforestation$simpson),      
+          mean(subset.teak$simpson),
+          mean(subset.pasture$simpson))
+
+mean.values53 <- data.frame(land.use, taxa53, abundance53, J53, shannon53, simpson53)
+
+##### Abundance
+ggplot(data=mean.values53, aes(x=land.use, y=abundance53, fill=land.use)) +
+  geom_bar(stat="identity", position=position_dodge(), aes(x = factor(land.use, level = land.use)), width = .5, show.legend = FALSE)+
+  #scale_fill_brewer(palette="Paired")+ 
+  labs(title="Total abundance of soil fauna", x="Land Use Type", y = "Mean abundance (count/1kg dry soil)")+
+  theme(text=element_text(family="Arial")) + 
+  scale_fill_viridis(discrete=TRUE, option="viridis", begin = .3,end = .75,)+
+  theme_minimal()+ theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(data=mean.values53, aes(x=land.use, y=taxa53, fill=land.use)) +
+  geom_bar(stat="identity", position=position_dodge(), aes(x = factor(land.use, level = land.use)), width = .5, show.legend = FALSE)+
+  #scale_fill_brewer(palette="Paired")+ 
+  labs(title="Taxonomic richness of soil fauna", x="Land Use Type", y = "Ordinal taxonomic richness")+
+  theme(text=element_text(family="Arial")) + 
+  scale_fill_viridis(discrete=TRUE, option="viridis", begin = .3,end = .75,)+
+  theme_minimal()+ theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(data=mean.values53, aes(x=land.use, y=shannon53, fill=land.use)) +
+  geom_bar(stat="identity", position=position_dodge(), aes(x = factor(land.use, level = land.use)), width = .5, show.legend = FALSE)+
+  #scale_fill_brewer(palette="Paired")+ 
+  labs(title="Shannon diversity of soil fauna", x="Land Use Type", y = "Shannon index")+
+  theme(text=element_text(family="Arial")) + 
+  scale_fill_viridis(discrete=TRUE, option="viridis", begin = .3,end = .75,)+
+  theme_minimal()+ theme(plot.title = element_text(hjust = 0.5))
+```
+
+Interesting. Mature forest still lags behind natural regeneration.
