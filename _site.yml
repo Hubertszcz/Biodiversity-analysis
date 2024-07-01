@@ -42,7 +42,7 @@ navbar:
           href: Camera_Traps.html
         - text: "Transects"
           href: Transects.html          
-    - text: "Insects"
+    - text: "Synthesis"
       href: Synthesis.html
     - icon: fa-github fa-lg
       href: https://github.com/Hubertszcz/Biodiversity-analysis      

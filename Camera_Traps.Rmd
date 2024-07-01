@@ -24,7 +24,7 @@ Data analysis starts with having all of the photos organized into folders by dep
 <details markdown="1">
 <summary><strong>Click here</strong> for notes on camera deployment dates</summary>
 
-```{r setup, message=FALSE, results = 'hide'}
+```{r, message=FALSE, results = 'hide'}
 
 #AZCAM12 had a messed up schedule. This camera was originally placed at a different location (the point was unnecessarily moved when first established, then moved back to original position). The timelapse (and photos taken), include the first location (which will be excluded from analysis). The set date in the metadata is the day the camera was moved to its final position. However, the timelapse shows that the camera was not in continuous operation. This is because this camera was positioned on a tree that was too thin and moved in the wind, resulting in 38,000 photos. The actual dates of operation for AZCAM12 are: 20240202-20240211, 20240304-20240311
 
@@ -41,7 +41,7 @@ Data analysis starts with having all of the photos organized into folders by dep
 Here is the metadata table:
 
 ```{r eval=T, include=T, message=FALSE,}
-camtrap_metadata <- read.csv("media/data/camtrap_metadata.csv",header = T, sep = ",")
+camtrap_metadata <- read.csv("media/working directory/data/camtrap_metadata.csv",header = T, sep = ",")
 
 library(DT)
 
@@ -57,4 +57,30 @@ datatable(camtrap_metadata, rownames = FALSE, width = "100%", colnames = c("came
                          dom = "Blfrtip", pageLength = 10,
                          lengthMenu = c(10, 20, 40, 70),
                          buttons = c("csv", "copy")))
+```
+
+
+even simpler: 
+
+```{r eval=T, include=T, message=FALSE, echo=FALSE}
+camtrap_metadata <- read.csv("media/working directory/data/camtrap_metadata.csv",header = T, sep = ",")
+library(DT)
+datatable(camtrap_metadata, extensions = "Buttons", options = list(dom = "Blfrtip", buttons = c("csv", "copy")))
+```
+
+```{r, message=FALSE, results = 'hide', echo=FALSE}
+#fancier(?) way to do this, copied from one of Jarrod's sites I think:
+#datatable(camtrap_metadata, rownames = FALSE, width = "100%", colnames = c("camera", "point", "finca", "sd.card", "set.date", "collect.date", "timelapse.end", "range", "program", "hard.drive1", "folder", "notes"),
+#          caption =
+#            htmltools::tags$caption(
+#              style = "caption-side: bottom; text-align: left;",
+#              "Table: ",
+#              htmltools::em("blob variables and Categories")),
+#          extensions = "Buttons",
+#          options = list(columnDefs =
+#                           list(list(className = "dt-left", targets = 0)),
+#                         dom = "Blfrtip", pageLength = 10,
+#                        lengthMenu = c(10, 20, 40, 70),
+#                         buttons = c("csv", "copy")))
+
 ```

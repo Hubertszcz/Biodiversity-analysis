@@ -7,3 +7,147 @@ output:
       toc: true
       toc_depth: 3
 ---
+
+![](media/gallery/Cricket.jpg)
+
+
+Soil invertebrates are incredibly diverse. To put things in perspective: Perching birds (this includes more than half of all bird species worldwide) are in the single order Passeriformes. A single soil sample from a mature forest can contain more than twenty different *orders* of animals! Most soil organisms in the tropics are undescribed species - if you look at a sample under the microscope you are likely to be the first human to ever lay eyes on at least a few species. These tiny creature also play a critical role in the carbon cycle, contributing to decomposition of plant material and cycling nutrients in the soil.
+
+
+Important for the context of holistic biodiversity monitoring, soil fauna are very location-specific. A mammal observation at a particular point does not necessarily give too much information about the quality of habitat at that point for the mammal - the mammal could just be passing through between places that it actually eats, sleeps and mates. On the other hand, soil fauna have vastly smaller home ranges, and in all likelihood spend their entire lives within a few meters of the sampling point. So, in a patchy landscape with a lot of disturbance they are better indicators of conditions at a particular sampling point.
+
+
+Brief summary of what I will be doing with my soil invert data:
+
+- Clean up and prepare for vegan R package
+
+- Calculate invertebrate richness at each sampling point, as well as abundance of all taxa across points and land use types
+
+- Calculate Shannon, Simpson and other diversity indices for each land use type
+
+- Run some ordinations to look at community composition differences between land use types.
+
+- Visualize abundance for all orders in relation to land use to see which are most sensitive. 
+
+- If I have enough temperature data from this first round of sampling see if temperature mediates invertebrate response to land use (I suspect it does). The moisture data is unfortunately pretty low resolution, but that probably also plays a very important role. 
+
+
+### Data cleanup 
+
+Here is a .csv file with raw data for the invert pilot study:
+
+```{r echo=FALSE}
+xfun::embed_file('media/working directory/data/Soil invert data.csv')
+```  
+
+
+This spreadsheet is a combination of the invertebrate abundance data and the collection/extraction metadata, in long format. I will start with some clean up and organization. This involves making sure that R reads my dates as dates, converting my data to long format, splitting the dataset in two (one with unknowns and one without), correcting abundance data for sample mass, and splitting the data into absolute and relative abundance. I use absolute abundance data for calculating diversity indices and relative abundance for community structure modelling. 
+
+<details markdown="1">
+<summary><strong>Click here</strong> for setup information.</summary>
+
+```{r setup, message=FALSE, results = 'hide'}
+
+data <- read.csv('media/working directory/data/soil invert data.csv')
+
+#load packages
+
+library(ggplot2)
+library(tidyr)
+library(gridExtra)
+library('funrar')
+library(lubridate)
+
+## Initial cleanup, organization
+
+#make dates recognizable by R
+data$collect.date <- ymd(data$collect.date)
+
+#Add 0 abundance for unobserved taxa
+data$count[is.na(data$count)] <- 0
+
+#remove excess rows from dataframe
+data<-data[which(complete.cases(data$collect.date)),]
+
+#create dataset with unknowns (for total abundance)
+data.unknown<-data
+
+#create dataset without unknowns (for diversity and community composition)
+data <- subset(data, !taxon == "Unknown",)
+
+#make my data wide for vegan package
+wide.data <- data %>%
+  pivot_wider(names_from = taxon, values_from = count)
+
+#make same wide dataframe for data with unknowns
+wide.data.unknown <- data.unknown %>%
+  pivot_wider(names_from = taxon, values_from = count)
+
+#Splitting data frame into count and environmental data
+wide.data2<-wide.data[,-c(1:12)]     
+wide.data3<-wide.data[,-c(13:66)]
+wide.data.unknown2<-wide.data.unknown[,-c(1:12)]
+wide.data.unknown3<-wide.data.unknown[,-c(13:67)]
+
+# Converting to count per dry mass
+
+#converting to count/1000g
+wide.data2 <- (1000/wide.data3$dry.mass)*wide.data2
+wide.data.unknown2 <- (1000/wide.data.unknown3$dry.mass)*wide.data.unknown2
+
+#Next I convert mass-corrected absolute abundance to relative abundance, which is used later for total abundance, individual taxon abundance, and community structure modelling. 
+
+#Before the conversion I create data frames backing up the mass-corrected absolute count data for diversity index calculations. 
+
+#Creating versions of the count data that are corrected for mass, but not made relative (for diversity indexes)
+wide.data.absolute <- wide.data2
+wide.data.unknown.absolute <- wide.data.unknown2
+
+#reincorporating, and duplicating mass-corrected absolute count data (only doing it for unknowns because this data frame will be used for abundance)
+wide.data.unknown[,c(13:67)] <- wide.data.unknown.absolute
+wide.data.unknown.absolute2 <- wide.data.unknown
+
+#converting absolute to relative abundance
+wide.data2 <- as.matrix(wide.data2)
+wide.data.unknown2 <- as.matrix(wide.data.unknown2)
+wide.data2 <- make_relative(wide.data2)
+wide.data.unknown2 <- make_relative(wide.data.unknown2)
+wide.data2 <- as.data.frame(wide.data2)
+wide.data.unknown2 <- as.data.frame(wide.data.unknown2)
+
+#reincorporating mass-corrected relative count data into original data frame
+wide.data[,c(13:66)] <- wide.data2
+wide.data.unknown[,c(13:67)] <- wide.data.unknown2
+
+```
+
+</details>
+
+
+Next up I'll calculate richness, evenness, total abundance, and several diversity indices using the ['vegan'](https://cran.r-project.org/web/packages/vegan/index.html) R package. I use absolute abundance to calculate these metrics.
+
+
+<details markdown="1">
+<summary><strong>Click here</strong> for setup information.</summary>
+```{r, message=FALSE, results = 'hide'}
+library(vegan)
+
+taxa <- specnumber(wide.data.absolute)                  #Tallying number of taxa
+shannon<-diversity(wide.data.absolute)                  #Shannon diversity index
+simpson<- diversity(wide.data.absolute, "simpson")      #Simpson diversity index
+J<-shannon/log(taxa)                                    #Pielou's evenness
+abundance<-rowSums(wide.data.unknown.absolute)          #total absolute abundance per 1000g (including unknowns)
+
+data.summary<-data.frame(wide.data3,taxa, abundance, J, shannon, simpson)
+
+diversity.indices <- data.summary[,c(1:2,13:17)]
+
+```
+</details>
+
+Here is a table with the results:
+
+```{r}
+knitr::kable(diversity.indices, format = "markdown")
+
+```
