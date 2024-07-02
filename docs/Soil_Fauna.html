@@ -2212,6 +2212,19 @@ Mammals
 <li><a href="#total-abundance" id="toc-total-abundance">Total abundance</a></li>
 <li><a href="#taxonomic-richness" id="toc-taxonomic-richness">Taxonomic Richness</a></li>
 <li><a href="#shannon-diversity" id="toc-shannon-diversity">Shannon Diversity</a></li>
+<li><a href="#everything-again-excluding-azsoil053" id="toc-everything-again-excluding-azsoil053">Everything again excluding AZSOIL053</a></li>
+<li><a href="#significance" id="toc-significance">Significance</a></li>
+<li><a href="#individual-taxa-abundance" id="toc-individual-taxa-abundance">Individual taxa abundance</a></li>
+<li><a href="#formicidae-hymenoptera" id="toc-formicidae-hymenoptera">Formicidae [Hymenoptera]</a></li>
+<li><a href="#coleoptera" id="toc-coleoptera">Coleoptera</a></li>
+<li><a href="#geococcus-hemiptera" id="toc-geococcus-hemiptera">Geococcus [Hemiptera]</a></li>
+<li><a href="#protura" id="toc-protura">Protura</a></li>
+<li><a href="#collembola" id="toc-collembola">Collembola</a></li>
+<li><a href="#oribatida" id="toc-oribatida">Oribatida</a></li>
+<li><a href="#other-acari" id="toc-other-acari">Other Acari</a></li>
+<li><a href="#pseudoscorpiones" id="toc-pseudoscorpiones">Pseudoscorpiones</a></li>
+<li><a href="#diplura" id="toc-diplura">Diplura</a></li>
+<li><a href="#symphyla" id="toc-symphyla">Symphyla</a></li>
 </ul>
 </nav>
 </div>
@@ -2245,6 +2258,7 @@ Mammals
 <span></span>
 <span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span></span>
 <span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyr.tidyverse.org'>tidyr</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span></span>
 <span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>gridExtra</span><span class='op'>)</span></span>
 <span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='st'><a href='https://rekyt.github.io/funrar/'>'funrar'</a></span><span class='op'>)</span></span>
 <span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://lubridate.tidyverse.org'>lubridate</a></span><span class='op'>)</span></span>
@@ -2525,12 +2539,98 @@ Mammals
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="Soil_Fauna_files/figure-html5/unnamed-chunk-7-1.png" width="624" /></p>
 </div>
+<h3 id="everything-again-excluding-azsoil053">Everything again excluding AZSOIL053</h3>
 <p>These results are somewhat surprising - Mature forest had the greatest abundance and richness in my pilot study. As of 1.7.24 these results are based only on 25 sampling points, once I get the data for the remainder the story will be more complete. I also wonder if sample 53 is single-handedly skewing these results right now?</p>
 <p>Let’s redo everything excluding sample 53:</p>
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="Soil_Fauna_files/figure-html5/unnamed-chunk-8-1.png" width="624" /><img src="Soil_Fauna_files/figure-html5/unnamed-chunk-8-2.png" width="624" /><img src="Soil_Fauna_files/figure-html5/unnamed-chunk-8-3.png" width="624" /></p>
 </div>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<p>Interesting. Mature forest still lags behind natural regeneration.</p>
+<h3 id="significance">Significance</h3>
+<p>Let’s run some ANOVAs</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>### Richness</span></span>
+<span><span class='va'>anova.soil.taxa</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/aov.html'>aov</a></span><span class='op'>(</span><span class='va'>taxa</span> <span class='op'>~</span> <span class='va'>land.use</span>, data <span class='op'>=</span> <span class='va'>data.summary</span><span class='op'>)</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>anova.soil.taxa</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>            Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+land.use     4  236.8   59.20   9.768 0.000182 ***
+Residuals   19  115.2    6.06                     
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>### Abundance</span></span>
+<span><span class='va'>anova.soil.abundance</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/aov.html'>aov</a></span><span class='op'>(</span><span class='va'>abundance</span> <span class='op'>~</span> <span class='va'>land.use</span>, data <span class='op'>=</span> <span class='va'>data.summary</span><span class='op'>)</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>anova.soil.abundance</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>            Df Sum Sq Mean Sq F value Pr(&gt;F)  
+land.use     4  29103    7276   2.677 0.0633 .
+Residuals   19  51639    2718                 
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>### Soil diversity</span></span>
+<span><span class='va'>anova.soil.diversity</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/aov.html'>aov</a></span><span class='op'>(</span><span class='va'>shannon</span> <span class='op'>~</span> <span class='va'>land.use</span>, data <span class='op'>=</span> <span class='va'>data.summary</span><span class='op'>)</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>anova.soil.diversity</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>            Df Sum Sq Mean Sq F value Pr(&gt;F)
+land.use     4  0.951  0.2379   0.996  0.434
+Residuals   19  4.538  0.2389               </code></pre>
+</div>
+<h3 id="individual-taxa-abundance">Individual taxa abundance</h3>
+<p>Now going into the weeds a bit, let’s see how land use affects diferent taxa. During my pilot testing some groups stood out as especially sensitive to land use, lets see if that holds.</p>
+<p>Very unfortunately my soil temperature/moisture probe didn’t work, and the new temperature probe I ordered broke shortly after starting soil collections. Consequently, soil moisture data is based on air dried samples weighed with a low-precision scale, and soil temperature values are only available for some of the samples. This is especially unfortunate because I strongly suspect that soil moisture and temperature mediate the effect of land use on soil invertebrates. Mature forests with a full canopy are likely to have more stable temperatures, lower daytime temperatures, and higher soil moisture than young forests or pastureland. Furthermore,the taxa that I found to be most sensitive to temperature during my research on BCI were most sensitive to land use in Azuero.</p>
+<details>
+<summary>
+<strong>Click here</strong> for setup code
+</summary>
+<div class="layout-chunk" data-layout="l-body">
+
+</div>
+</details>
+<h3 id="formicidae-hymenoptera">Formicidae [Hymenoptera]</h3>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="Soil_Fauna_files/figure-html5/unnamed-chunk-11-1.png" width="624" /></p>
+</div>
+<h3 id="coleoptera">Coleoptera</h3>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="Soil_Fauna_files/figure-html5/unnamed-chunk-12-1.png" width="624" /></p>
+</div>
+<h3 id="geococcus-hemiptera">Geococcus [Hemiptera]</h3>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="Soil_Fauna_files/figure-html5/unnamed-chunk-13-1.png" width="624" /></p>
+</div>
+<h3 id="protura">Protura</h3>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="Soil_Fauna_files/figure-html5/unnamed-chunk-14-1.png" width="624" /></p>
+</div>
+<h3 id="collembola">Collembola</h3>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="Soil_Fauna_files/figure-html5/unnamed-chunk-15-1.png" width="624" /></p>
+<pre><code>NULL</code></pre>
+</div>
+<h3 id="oribatida">Oribatida</h3>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="Soil_Fauna_files/figure-html5/unnamed-chunk-16-1.png" width="624" /></p>
+</div>
+<h3 id="other-acari">Other Acari</h3>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="Soil_Fauna_files/figure-html5/unnamed-chunk-17-1.png" width="624" /></p>
+</div>
+<h3 id="pseudoscorpiones">Pseudoscorpiones</h3>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="Soil_Fauna_files/figure-html5/unnamed-chunk-18-1.png" width="624" /></p>
+</div>
+<h3 id="diplura">Diplura</h3>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="Soil_Fauna_files/figure-html5/unnamed-chunk-19-1.png" width="624" /></p>
+</div>
+<h3 id="symphyla">Symphyla</h3>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="Soil_Fauna_files/figure-html5/unnamed-chunk-20-1.png" width="624" /></p>
+</div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
