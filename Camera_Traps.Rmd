@@ -18,6 +18,7 @@ Here is the full guide:
 xfun::embed_file('media/Wildlife Insights Getting Started Guide - ENG - Shared.pdf')
 ```  
 
+
 Data analysis starts with having all of the photos organized into folders by deployment (location and camera used), and having a table with the metadata deployment details. To fill out this metadata table and double check that everything is correct I went through all of the field sheets for deployment and collection, making sure that collection dates on the sheets match up with the folder names. I then went into the timelapse folder from each camera deployment and noted the date of the last timelapse marker (to confirm that the camera traps were operating until the collection date). As was noted during collection of AZCAM05, it had been turned off at a previous visit and not turned back on. The timelapse markers show the actual date range the cameras were operating.
 
 
@@ -47,6 +48,7 @@ library(DT)
 datatable(camtrap_metadata, extensions = "Buttons", options = list(dom = "Blfrtip", buttons = c("csv", "copy")))
 ```
 
+
 ```{r, message=FALSE, results = 'hide', echo=FALSE}
 #fancier(?) way to do this, copied from one of Jarrod's sites I think:
 #datatable(camtrap_metadata, rownames = FALSE, width = "100%", colnames = c("camera", "point", "finca", "sd.card", "set.date", "collect.date", "timelapse.end", "range", "program", "hard.drive1", "folder", "notes"),
@@ -63,3 +65,70 @@ datatable(camtrap_metadata, extensions = "Buttons", options = list(dom = "Blfrti
 #                         buttons = c("csv", "copy")))
 
 ```
+
+
+It took a long time to upload the photos to wildlife insights, even with solid wifi. It took about a week and a half of uploads (in the background while I do other stuff), average of a few hours a day upload, maybe 20 hours total(?) for 78,019 photos from 49 points. I did not upload the four points that had the most photos because those four points together represent 101,556 photos. Uploading them will take ages, as will sorting through the photos, so I decided to put that off and focus on the first 49. These first 49 cameras have 2196 camera-days' worth of data, so a solid sampling effort.
+
+> **Study design recommendation from Kays et al 2020 'An empirical evaluation of camera trap study design: How
+many, how long and when?'**
+>
+"Based on these analyses, we recommend that studies aimed at estimating species richness and relative abundance/occupancy of mammal species use arrays of at least 40–60 camera traps run for 3–5 weeks."
+>
+> That's 840 to 2100 camera days. The first 49 cameras already beat that, with the rest of the Ponterra/PEA data we'll have double the max recomendation. Certainly hope it's enough to oversaturate the data and know how far we can scale back for large-scale implementation.
+>
+
+
+The four points I didn't upload yet are the worst, though others definitely were bad too. These cameras took so many photos due to windy conditions, camera placement on too thin trees (that sway in big winds), or inadequate removal of vegetation from in front of the camera. During fieldwork I had a policy of minimal alteration to the environment a the sampling sites, we did not even bring machetes to the field. In the future I will adjust this policy a bit to make sure there are no plants in the immediate vicinity of the camera that could cause thousands of blank photos in high wind. The mature forest sites had fewer photos, likely due to thicker trees and more buffering of wind in the understory. The greatest number of photos were from pasture sites, where the cameras were mounted on thinner trees that had greater wind exposure, and in teak plantation, where the leaf litter was sufficiently large and decomposition-resistant that it stirred enough in the wind to trigger the cameras. Dry season is windier than wet season, so hopefully wet season sampling has fewer blank photos, and I will be more mindful of tree thickness. Perhaps I can also reconsider mounting cameras on stakes at pasture sites.
+
+
+Sorting these images also takes a while - how long really depends on what is in them and how the AI classified things. If the camera was in a field on a skinny tree that moved a bunch, I got thousands of photos but it wasn't too difficult to sort through as the photo itself wasn't too structurally complex and I could generally scan through them quickly. If the camera was in denser understory with a large leave in front that moved a lot, it also produced thousands of photos, but the structural complexity of the scene meant more time was needed to sort through. 
+
+Very few of the photos marked as blank by the AI had an animal in them (well less than 1%, not actually measured), so I decided to start by sorting the 'not blank' photos - those for which an animal was identified or there was no confident computer vision result. This took a couple of days of work for ~25k photos. This includes blanks of cameras that had fewer photos, to have a better understanding of how blank the blanks are. Now that the photos not manually sorted on wildlife insights are confident blanks, I download the data:
+
+
+```{r echo=FALSE}
+xfun::embed_file('media/working directory/data/camera data first 53/sequences.csv')
+```
+
+
+Which came along with some metadata:
+
+
+```{r echo=FALSE}
+xfun::embed_file('media/working directory/data/camera data first 53/projects.csv')
+xfun::embed_file('media/working directory/data/camera data first 53/images_2007494.csv')
+xfun::embed_file('media/working directory/data/camera data first 53/deployments.csv')
+xfun::embed_file('media/working directory/data/camera data first 53/cameras.csv')
+```  
+
+
+I will mostly be following [these instructions](https://bookdown.org/c_w_beirne/wildCo-Data-Analysis/standard.html) for analysis.
+
+However, let's first see if we can do some of the same things with this as I did for soil fauna, at least richness by land use:
+
+<details markdown="1">
+<summary><strong>Click here</strong> for code </summary>
+
+```{r setup, message=FALSE, results = 'hide'}
+
+cam.data <- read.csv('media/working directory/data/camera data first 53/sequences.csv')
+cam.metadata <- read.csv('media/working directory/data/camtrap_metadata.csv')
+
+#these are all the things we saw (excluding humans, which were already filtered out)
+taxa <- unique(cam.data$common_name)   
+cam.data$points <- substr(cam.data$deployment_id, 0, 7)
+points <- unique(cam.data$points)
+sort(points)
+
+library(tidyr)
+library(dplyr)
+
+
+df <- cam.data %>% group_by(common_name) %>% summarize(n())
+df.wild <- df[!(df$common_name %in% "Domestic Horse"),]
+df.wild <- df.wild[!(df.wild$common_name %in% "Domestic Cattle"),]
+
+
+pie(df.wild$`n()`, labels = df.wild$common_name)
+```
+
