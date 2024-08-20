@@ -9,3 +9,7 @@ output:
 ---
 
 I will use this page to document combining the various biodiversity indicators I measured; creating a metric of holistic biodiversity, modelling compunity composition, and cost-effectiveness analyses.
+
+Notes:
+
+- I got elevation data from coordinates with this: https://www.freemaptools.com/elevation-finder.htm
