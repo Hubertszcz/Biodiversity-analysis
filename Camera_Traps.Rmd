@@ -104,7 +104,7 @@ xfun::embed_file('media/working directory/data/camera data first 53/cameras.csv'
 
 I will mostly be following [these instructions](https://bookdown.org/c_w_beirne/wildCo-Data-Analysis/standard.html) for analysis.
 
-However, let's first see if we can do some of the same things with this as I did for soil fauna, at least richness by land use:
+However, let's first just see if I can do some basic things myself. Would be nice to get richness at each point, and I imagine not too difficult with the vegan package like I did for soil inverts.
 
 <details markdown="1">
 <summary><strong>Click here</strong> for code </summary>

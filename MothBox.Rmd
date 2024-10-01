@@ -7,3 +7,7 @@ output:
       toc: true
       toc_depth: 3
 ---
+
+Mothbox is a unique tool for automated insect monitoring; a compact, light-weight device that is programmed to turn on attractant lights and take photos on custom schedules. One day Mothboxes will fill a similar role for insects that camera traps fill for mammals, offering a standardized, scalable, accessible monitoring tool. Full documentation for the Mothbox project can be found on the Mothbox website and github: https://digital-naturalism-laboratories.github.io/Mothbox/
+
+Here I will focus on the process for analyzing mothbox data.

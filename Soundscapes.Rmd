@@ -7,3 +7,41 @@ output:
       toc: true
       toc_depth: 3
 ---
+
+Soundscape analysis is an emerging field with no consensus on best practice. There are several R packages that extract various index values from .WAV files (soundecology and warbleR), so many people just use indices available in these packages. However, many of these indices are likely oversimplifications that do not make the best use of acoustic data.
+
+In my analyses I will consider a handful of the most popular soundscape indices that are most easily extracted from acoustic files, as well as more sophisticated approaches (developed recently at the Crowther Lab). Once I have workflows established, I will calculate how long it takes to process this kind of data. Data analysis, especially computationally-heavy things like analyzing sound files, takes time, specialized knowledge, and computer resources that may not be available to many restoration practitioners, so this is an important variable for cost-effectiveness.
+
+To start, I will use soundecology to calculate a few basic indices from my bulk data:
+
+<details markdown="1">
+<summary><strong>Click here</strong> for code </summary>
+
+```{r setup, message=FALSE, results = 'hide'}
+#Load the package
+library(soundecology)
+
+#set working directory so the packages can find my folder with files
+setwd("C:/Users/Hubert/Desktop/Biodiversity Monitoring/Biodiversity data analysis")
+
+
+#Analyze a folder of sample files to get the acoustic complexity index
+multiple_sounds(directory = "C:/Users/Hubert/Desktop/Biodiversity Monitoring/Biodiversity data analysis/sample soundscape files", 
+                resultfile = "C:/Users/Hubert/Desktop/Biodiversity Monitoring/Biodiversity data analysis/data.csv", 
+                soundindex = "acoustic_complexity")
+
+#these are 15 minute recordings, I need to figure out how to crop them down to 1 minute chunks, 
+#because Tom sys that's standard
+
+#It works, I get numbers, the numbers are different for different files. 
+#Next let's try some from different land use types?
+
+#tom recommends a summary proxy for each sampling point, perhaps the range of index values over the week
+
+#There are so many ways we could do this. Perhaps an average of the daily ranges?
+
+#this greatly increases complexity! Not only are there dozens of indices to choose from, 
+#there are infinite ways of splitting and summarizing the data at each point with each index
+
+```
+f

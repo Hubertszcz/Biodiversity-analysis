@@ -2204,6 +2204,42 @@ Mammals
 
 
 <div class="d-article">
+<p>Soundscape analysis is an emerging field with no consensus on best practice. There are several R packages that extract various index values from .WAV files (soundecology and warbleR), so many people just use indices available in these packages. However, many of these indices are likely oversimplifications that do not make the best use of acoustic data.</p>
+<p>In my analyses I will consider a handful of the most popular soundscape indices that are most easily extracted from acoustic files, as well as more sophisticated approaches (developed recently at the Crowther Lab). Once I have workflows established, I will calculate how long it takes to process this kind of data. Data analysis, especially computationally-heavy things like analyzing sound files, takes time, specialized knowledge, and computer resources that may not be available to many restoration practitioners, so this is an important variable for cost-effectiveness.</p>
+<p>To start, I will use soundecology to calculate a few basic indices from my bulk data:</p>
+<details markdown="1">
+<summary>
+<strong>Click here</strong> for code
+</summary>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>#Load the package</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://ljvillanueva.github.io/soundecology/'>soundecology</a></span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'>#set working directory so the packages can find my folder with files</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>setwd</a></span><span class='op'>(</span><span class='st'>"C:/Users/Hubert/Desktop/Biodiversity Monitoring/Biodiversity data analysis"</span><span class='op'>)</span></span>
+<span></span>
+<span></span>
+<span><span class='co'>#Analyze a folder of sample files to get the acoustic complexity index</span></span>
+<span><span class='fu'><a href='https://rdrr.io/pkg/soundecology/man/multiple_sounds.html'>multiple_sounds</a></span><span class='op'>(</span>directory <span class='op'>=</span> <span class='st'>"C:/Users/Hubert/Desktop/Biodiversity Monitoring/Biodiversity data analysis/sample soundscape files"</span>, </span>
+<span>                resultfile <span class='op'>=</span> <span class='st'>"C:/Users/Hubert/Desktop/Biodiversity Monitoring/Biodiversity data analysis/data.csv"</span>, </span>
+<span>                soundindex <span class='op'>=</span> <span class='st'>"acoustic_complexity"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'>#these are 15 minute recordings, I need to figure out how to crop them down to 1 minute chunks, </span></span>
+<span><span class='co'>#because Tom sys that's standard</span></span>
+<span></span>
+<span><span class='co'>#It works, I get numbers, the numbers are different for different files. </span></span>
+<span><span class='co'>#Next let's try some from different land use types?</span></span>
+<span></span>
+<span><span class='co'>#tom recommends a summary proxy for each sampling point, perhaps the range of index values over the week</span></span>
+<span></span>
+<span><span class='co'>#There are so many ways we could do this. Perhaps an average of the daily ranges?</span></span>
+<span></span>
+<span><span class='co'>#this greatly increases complexity! Not only are there dozens of indices to choose from, </span></span>
+<span><span class='co'>#there are infinite ways of splitting and summarizing the data at each point with each index</span></span></code></pre>
+</div>
+</div>
+<p>f</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
