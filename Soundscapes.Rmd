@@ -19,16 +19,16 @@ To start, I will use soundecology to calculate a few basic indices from my bulk 
 
 ```{r setup, message=FALSE, results = 'hide'}
 #Load the package
-library(soundecology)
+#library(soundecology)
 
 #set working directory so the packages can find my folder with files
-setwd("C:/Users/Hubert/Desktop/Biodiversity Monitoring/Biodiversity data analysis")
+#setwd("C:/Users/Hubert/Desktop/Biodiversity Monitoring/Biodiversity data analysis")
 
 
 #Analyze a folder of sample files to get the acoustic complexity index
-multiple_sounds(directory = "C:/Users/Hubert/Desktop/Biodiversity Monitoring/Biodiversity data analysis/sample soundscape files", 
-                resultfile = "C:/Users/Hubert/Desktop/Biodiversity Monitoring/Biodiversity data analysis/data.csv", 
-                soundindex = "acoustic_complexity")
+#multiple_sounds(directory = "C:/Users/Hubert/Desktop/Biodiversity Monitoring/Biodiversity data analysis/sample soundscape files", 
+#                resultfile = "C:/Users/Hubert/Desktop/Biodiversity Monitoring/Biodiversity data analysis/data.csv", 
+#                soundindex = "acoustic_complexity")
 
 #these are 15 minute recordings, I need to figure out how to crop them down to 1 minute chunks, 
 #because Tom sys that's standard

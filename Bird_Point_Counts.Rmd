@@ -9,3 +9,81 @@ output:
 ---
 
 Each sampling point had two
+
+
+
+There are two csv files for this analysis, one with sampling point metadata and one with bird point count data: 
+```{r echo=FALSE}
+#xfun::embed_file('docs/data/Ponterra deployments PON001-150.csv')
+```  
+
+```{r echo=FALSE}
+#xfun::embed_file('docs/data/Ponterra point counts PON001-100.csv')
+```  
+
+
+Here is how I set up the environment and did some initial data cleanup:
+
+<details markdown="1">
+<summary><strong>Click here</strong> for code </summary>
+
+```{r setup, message=FALSE, results = 'hide'}
+setwd("C:/Users/Hubert/Desktop/Biodiversity Monitoring/Biodiversity data analysis/Biodiversity-analysis")
+
+#Load libraries
+library(ggplot2)
+library(vegan)
+library(dplyr)
+library(viridis) 
+library(tidyr)
+
+# Load the datasets
+metadata <- read.csv('docs/data/Ponterra deployments PON001-150.csv')
+data <- read.csv('docs/data/Ponterra point counts PON001-100.csv')
+
+#data cleanup
+
+#remove rows/columns not in analysis
+metadata <- metadata[c(1:100),]                 ### which points are we analyzing?
+data <- data[c(1:20)]                           ### extra blank columns
+data<-data[which(complete.cases(data$date)),]   ### extra blank rows
+
+## just in case confirmations:
+
+#making sure there are no misspelled names - scroll through and see if there are two in a row only a letter off
+#genus_species <- unique(data$bird)
+#species_list <-sort(genus_species)
+#species_list <- as.data.frame(species_list)
+
+#make sure there are two counts per each point - scroll through and see if there are two for each point
+#counts <- unique(data$bird_count)
+#counts <-sort(counts)
+#counts <- as.data.frame(counts)
+
+### 12.6.25 - we are missing PON26-50; 68-84, so only have 58 of the 100 points
+
+#remove blank rows (if the number of rows changes in data, then there are blanks, look into why)
+#data[data == ""] <- NA  #replace blank with NA
+#data <- data[complete.cases(data$name), ]
+
+```
+
+</details>
+
+Each point count consisted of 10 minutes of observation, followed by 5 minutes of attracting birds with a playback recording. 
+
+For now, I will only consider the 10 minute point count, so I split the data here:
+
+<details markdown="1">
+<summary><strong>Click here</strong> for code </summary>
+
+```{r, message=FALSE, results = 'hide'}
+#split bird data into playback and non-playback
+bird_playback_data <- subset(data, playback != "no",)
+bird_point_data <- subset(data, playback == "no",)
+```
+</details>
+
+Now, here is an important inflection point. The 10 minute point counts were conducted in 2-minute sub-sampling blocks. For example, if a bird was observed in the first two minutes, and in the second two minutes, but not in minutes 4-10, then they get a '1' in data$X0 and data$X2, but not in data$X4,X6, and X8. This data entry system was used to allow a mark-recapture style analysis with higher precision in abundance values. This is based on the approach from Alldredge et al (2007) https://doi.org/10.1093/auk/124.2.653. Tom BradferLawrence, who recommended that I do this kind of sampling, says "Abundance modelling which accounts for differences in detectability is done using a Bayesian hierarchical framework", and he recommends looking into the spAbundance R package (Doser et al).
+
+However, all that is complicated, so I am not going to do that at the moment, and just use number of rows as abundance (same species, different individuals get their own rows).

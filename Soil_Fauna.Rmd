@@ -37,7 +37,7 @@ Brief summary of what I will be doing with my soil invert data:
 Here is a .csv file with raw data for the invert pilot study:
 
 ```{r echo=FALSE}
-xfun::embed_file('media/working directory/data/Soil invert data.csv')
+xfun::embed_file('docs/data/soil invert data.csv')
 ```  
 
 
@@ -48,8 +48,9 @@ This spreadsheet is a combination of the invertebrate abundance data and the col
 <summary><strong>Click here</strong> for code </summary>
 
 ```{r setup, message=FALSE, results = 'hide'}
+#setwd("C:/Users/Hubert/Desktop/Biodiversity Monitoring/Biodiversity data analysis/Biodiversity-analysis")
 
-data <- read.csv('media/working directory/data/soil invert data.csv')
+data <- read.csv('docs/data/soil invert data.csv')
 
 #load packages
 

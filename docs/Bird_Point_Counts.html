@@ -32,7 +32,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -458,8 +458,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
 
   <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-  <link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet"/>
-  <link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet"/>
+  <link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"/>
+  <link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"/>
   <script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
   <script src="site_libs/autocomplete-0.37.1/autocomplete.min.js"></script>
   <script src="site_libs/fuse-6.4.1/fuse.min.js"></script>
@@ -2099,7 +2099,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2205,6 +2205,76 @@ Mammals
 
 <div class="d-article">
 <p>Each sampling point had two</p>
+There are two csv files for this analysis, one with sampling point metadata and one with bird point count data:
+<div class="layout-chunk" data-layout="l-body">
+
+</div>
+<div class="layout-chunk" data-layout="l-body">
+
+</div>
+<p>Here is how I set up the environment and did some initial data cleanup:</p>
+<details>
+<summary>
+<strong>Click here</strong> for code
+</summary>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>setwd</a></span><span class='op'>(</span><span class='st'>"C:/Users/Hubert/Desktop/Biodiversity Monitoring/Biodiversity data analysis/Biodiversity-analysis"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'>#Load libraries</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/vegandevs/vegan'>vegan</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://sjmgarnier.github.io/viridis/'>viridis</a></span><span class='op'>)</span> </span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyr.tidyverse.org'>tidyr</a></span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Load the datasets</span></span>
+<span><span class='va'>metadata</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='st'>'docs/data/Ponterra deployments PON001-150.csv'</span><span class='op'>)</span></span>
+<span><span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='st'>'docs/data/Ponterra point counts PON001-100.csv'</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'>#data cleanup</span></span>
+<span></span>
+<span><span class='co'>#remove rows/columns not in analysis</span></span>
+<span><span class='va'>metadata</span> <span class='op'>&lt;-</span> <span class='va'>metadata</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span><span class='op'>)</span>,<span class='op'>]</span>                 <span class='co'>### which points are we analyzing?</span></span>
+<span><span class='va'>data</span> <span class='op'>&lt;-</span> <span class='va'>data</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>20</span><span class='op'>)</span><span class='op'>]</span>                           <span class='co'>### extra blank columns</span></span>
+<span><span class='va'>data</span><span class='op'>&lt;-</span><span class='va'>data</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/complete.cases.html'>complete.cases</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>date</span><span class='op'>)</span><span class='op'>)</span>,<span class='op'>]</span>   <span class='co'>### extra blank rows</span></span>
+<span></span>
+<span><span class='co'>## just in case confirmations:</span></span>
+<span></span>
+<span><span class='co'>#making sure there are no misspelled names - scroll through and see if there are two in a row only a letter off</span></span>
+<span><span class='co'>#genus_species &lt;- unique(data$bird)</span></span>
+<span><span class='co'>#species_list &lt;-sort(genus_species)</span></span>
+<span><span class='co'>#species_list &lt;- as.data.frame(species_list)</span></span>
+<span></span>
+<span><span class='co'>#make sure there are two counts per each point - scroll through and see if there are two for each point</span></span>
+<span><span class='co'>#counts &lt;- unique(data$bird_count)</span></span>
+<span><span class='co'>#counts &lt;-sort(counts)</span></span>
+<span><span class='co'>#counts &lt;- as.data.frame(counts)</span></span>
+<span></span>
+<span><span class='co'>### 12.6.25 - we are missing PON26-50; 68-84, so only have 58 of the 100 points</span></span>
+<span></span>
+<span><span class='co'>#remove blank rows (if the number of rows changes in data, then there are blanks, look into why)</span></span>
+<span><span class='co'>#data[data == ""] &lt;- NA  #replace blank with NA</span></span>
+<span><span class='co'>#data &lt;- data[complete.cases(data$name), ]</span></span></code></pre>
+</div>
+</div>
+</details>
+<p>Each point count consisted of 10 minutes of observation, followed by 5 minutes of attracting birds with a playback recording.</p>
+<p>For now, I will only consider the 10 minute point count, so I split the data here:</p>
+<details>
+<summary>
+<strong>Click here</strong> for code
+</summary>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>#split bird data into playback and non-playback</span></span>
+<span><span class='va'>bird_playback_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>playback</span> <span class='op'>!=</span> <span class='st'>"no"</span>,<span class='op'>)</span></span>
+<span><span class='va'>bird_point_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>playback</span> <span class='op'>==</span> <span class='st'>"no"</span>,<span class='op'>)</span></span></code></pre>
+</div>
+</div>
+</details>
+<p>Now, here is an important inflection point. The 10 minute point counts were conducted in 2-minute sub-sampling blocks. For example, if a bird was observed in the first two minutes, and in the second two minutes, but not in minutes 4-10, then they get a ‘1’ in data<span class="math inline">\(X0 and data\)</span>X2, but not in data$X4,X6, and X8. This data entry system was used to allow a mark-recapture style analysis with higher precision in abundance values. This is based on the approach from Alldredge et al (2007) <a href="https://doi.org/10.1093/auk/124.2.653" class="uri">https://doi.org/10.1093/auk/124.2.653</a>. Tom BradferLawrence, who recommended that I do this kind of sampling, says “Abundance modelling which accounts for differences in detectability is done using a Bayesian hierarchical framework”, and he recommends looking into the spAbundance R package (Doser et al).</p>
+<p>However, all that is complicated, so I am not going to do that at the moment, and just use number of rows as abundance (same species, different individuals get their own rows).</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
@@ -2213,6 +2283,15 @@ Mammals
 <div class="d-appendix">
 </div>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 
 <!--radix_placeholder_site_after_body-->
 <!--/radix_placeholder_site_after_body-->

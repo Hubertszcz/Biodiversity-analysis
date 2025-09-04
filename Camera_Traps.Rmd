@@ -43,7 +43,7 @@ Here is the metadata table:
 
 
 ```{r eval=T, include=T, message=FALSE, echo=FALSE}
-camtrap_metadata <- read.csv("media/working directory/data/camtrap_metadata.csv",header = T, sep = ",")
+camtrap_metadata <- read.csv("docs/data/camtrap_metadata.csv",header = T, sep = ",")
 library(DT)
 datatable(camtrap_metadata, extensions = "Buttons", options = list(dom = "Blfrtip", buttons = c("csv", "copy")))
 ```
@@ -87,7 +87,7 @@ Very few of the photos marked as blank by the AI had an animal in them (well les
 
 
 ```{r echo=FALSE}
-xfun::embed_file('media/working directory/data/camera data first 53/sequences.csv')
+xfun::embed_file('docs/data/camera data first 53/sequences.csv')
 ```
 
 
@@ -95,10 +95,10 @@ Which came along with some metadata:
 
 
 ```{r echo=FALSE}
-xfun::embed_file('media/working directory/data/camera data first 53/projects.csv')
-xfun::embed_file('media/working directory/data/camera data first 53/images_2007494.csv')
-xfun::embed_file('media/working directory/data/camera data first 53/deployments.csv')
-xfun::embed_file('media/working directory/data/camera data first 53/cameras.csv')
+xfun::embed_file('docs/data/camera data first 53/projects.csv')
+xfun::embed_file('docs/data/camera data first 53/images_2007494.csv')
+xfun::embed_file('docs/data/camera data first 53/deployments.csv')
+xfun::embed_file('docs/data/camera data first 53/cameras.csv')
 ```  
 
 
@@ -111,8 +111,8 @@ However, let's first just see if I can do some basic things myself. Would be nic
 
 ```{r setup, message=FALSE, results = 'hide'}
 
-cam.data <- read.csv('media/working directory/data/camera data first 53/sequences.csv')
-cam.metadata <- read.csv('media/working directory/data/camtrap_metadata.csv')
+cam.data <- read.csv('docs/data/camera data first 53/sequences.csv')
+cam.metadata <- read.csv('docs/data/camtrap_metadata.csv')
 
 #these are all the things we saw (excluding humans, which were already filtered out)
 taxa <- unique(cam.data$common_name)   
