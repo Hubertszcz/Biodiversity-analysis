@@ -1,7 +1,7 @@
 ---
 title: "Biodiversity data analysis"
 description: |
-  Data cleaning and analysis workflows for 2024 Azuero Biodiversity Monitoring Campaign
+  Data cleaning and analysis workflows for Hubert's biodiversity monitoring system
 output:
   distill::distill_article:
     includes:
@@ -22,29 +22,86 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```
 
-Initial data collection ran from January through March 2024, mostly around Venao, Azuero Peninsula, Panama. The 53 sampling points were distributed across 450 hectares, split between five different land use types: pasture, natural regeneration secondary forest, assisted regeneration (planted) secondary forest, teak plantation, and mature secondary forest.
+## Overview
 
-![](media/gallery/First 450.jpg)
+*How can we measure biodiversity to fund and ensure the success of tropical forest restoration projects?*
 
-There were four primary objectives of this research:
-
-- Full-scale test of the biodiversity monitoring system I’ve been designing (monitoring diverse indices, systematically, at scale, in Azuero)
-
-- Establish the amount of time and money to implement each protocol.
-
-- Look at the effect of different reforestation pathways on biodiversity recovery
-
-- Pilot monitoring for Verra’s SDVista Nature Credit system
+To answer this question, I designed a system of protocols for monitoring a diversity of diversity - across different taxonomic groups and trophic levels. In selecting the protocols, I aimed aimed to caste a broad net while avoiding some things for logistics reasons: handling of vertebrates, traps that need to be checked periodically (small mammal traps or bowl traps for instance), protocols that need to occur at night. I knew that attempting to collect those kind of data in remote field sites across thousands of hectares would not be scalable. I also decided to orient the sampling around a grid of equidistant points spread across each land parcel, to be compatible with the mammal Random Encounter Model system, and to be agnostic to landscape features. This means species richness accumulates more slowly than ecologically selected sites (like clay licks of fruiting trees for mammals for instance), but the system is a lot more standardized and replicable. The points are spaced 275 meters apart. This distance was chosen because we estimated that it was the closest the acoustic sensors could be without regularly picking up the same individuals. The goal was to oversample, both in terms of sampling intensity, and number of protocols, to then understand how to cost-effectively scale back for large-scale implementation. 
 
 
-Here are some data analysis goals:
+Each sampling point has the following:
 
-- Clean up data so that I have richness (and abundance where relevant) values for each protocol at each sampling point, and holistically
+1. Camera trap for mammals
+2. Audiomoth for birds and soundscapes
+3. Bird point counts by ornithologist (two consecutive days)
+4. Gentry transect (2x50m) by Botanist, targeting all woody stems greater than 2.5cm DBH, as well as invasive plant cover and deadwood
+5. Soil collection (three subsamples per point), which is followed by Tullgren extraction of soil fauna
+6. A set of metadata collected (slope, aspect, ground cover, land use type, human influence, etc.)
 
-- Create accumulation/rarefaction curves to see how effectively I sampled
+Additionally, every trip into the field is also a mammal transect, where crew members log total distance and time, as well as the coordinates of all evidence of mammals (organism, scat, track, etc.).
 
-- Create a summary metric for holistic biodiversity at each sampling point.
+![Sampling point grid for one parcel, with mammal transects](media/gallery/Abilio Delgado finca.png){width=50%}
 
-- Determine the cost per point of implementing each protocol
+Data inventory:
 
-- Rank biodiversity indicators for how much time and specialized knowledge is required for their implementation.
+- 53 points ETH dry and wet season
+- 32 points Pro Eco Azuero
+- 150 points Ponterra Panama
+
+I also have 25 points of data in Mexico, though those are missing acoustic sampling and some have soil invertebrates extracted but not identified, others are missing soil extractions.
+
+
+A sample data set can be found here:
+
+```{r echo=FALSE}
+xfun::embed_file("media/data/data.zip")
+```  
+
+### Key Research Questions
+
+1. **Most Representative Indicators for Biodiversity:** Which indicators are most effective for assessing and representing multi-taxa biodiversity in the context of tropical forest restoration projects?
+2. **Most Cost-Effective Indicators:** Which indicators are the most cost effective for deployment at scale, and which gaps in monitoring technology and methodology are most important to prioritise for innovation?
+3. **Can Satellite Data Represent Biodiversity?** Do existing global layers of biodiversity complexity/intactness correlate with high resolution ground data? How much ground data do global models need to accurately predict high-resolution biodiversity patterns?
+4. **What Can New Technology Offer?** How can open science technology and artificial intelligence make biodiversity monitoring more scalable and accessible for non-specialists? When is technology not the answer? What benefits and tradeoffs are there in human-based and electronics-based sampling?
+
+
+### History
+
+I started this project in 2022 while working for Earthshot, and conducted an initial pilot study on the Azuero Peninsula of Panama in November 2022. The goal was to develop a standardized, scalable system for measuring 'holistic'/multi-indicator biodiversity across large tracts of land in the tropics to validate the success of reforestation projects. It needed to be scientifically robust, yet scalable and standardisable for a diversity of ecological and socioeconomic contexts. I quickly realized that there are massive gaps in scientific understanding of how to measure biodiversity systematically and cost-effectively across thousands of hectares in the hyper-diverse tropics, and began planning for research to fill these gaps. In 2023 I started working with Dr. Daisy Dent, with the assumption that I would join her lab with this project as a PhD student. I left Earthshot and in mid-2023 we won $450,000 in funding from Google to develop the project. 
+
+This project is registered with the Smithsonian Tropical Research Institute with me as the PI, and I also worked closely with Pro Eco Azuero, a Panamanian reforestation nonprofit. Simultaneously, I began advising Ponterra, a carbon project developer startup operating in Azuero, who wanted to implement my system across their project to earn biodiversity credit. The Ponterra side of the project was also accepted as a pilot project for Verra's SD VISta nature credit accreditation scheme. The initial goal was to sample 50 points across 500 hectares, including points in 5 different land-use types, in both the dry season and the wet, though I have now greatly exceeded this goal. As of late 2025, I have 235 points in Panama and 25 in Mexico, representing approximately 2600 hectares. 
+
+In January-March 2024, I trained a team and we established the first 53 sampling points across ~450 hectares, mostly around Venao, Azuero Peninsula, Panama. The points were evenly distributed between five land0use types: pasture, natural regeneration secondary forest, assisted regeneration (planted) secondary forest, teak plantation, and mature secondary forest.After the initial 53, I proceeded to coordinate sampling of an additional 25 for Ponterra, and an additional 32 for Pro Eco Azuero, which got funding to implement my system as well. In late 2024 I returned to Panama to coordinate wet season sampling across the initial 53 points, as well as an additional 25 points for Ponterra. In 2025 I scaled up further, adding another 100 new points' worth of data from Ponterra. 
+
+
+None of this would have been possible without funding from Earthshot, Google, Ponterra, and Pro Eco Azuero. Huge thanks to my field crews and lab technicians: Daniel Murcia, Josue Santos, Julissa Guevera, Jorge Valdes, Daniel Gonzales, Katerin Ramos, Sarah Taciani, Kristy Sanchez Vega, Beatriz Aguirre, Dario Quiroz, Adrian Agrazal, Nataly Barrios, Adiela Muñoz, Cristian Ureña, Cesar Zambrano, Arianna Casetta, and Leonardo Vega
+
+
+
+![](media/gallery/235 points.jpg)
+
+### Productive sidequest
+
+
+As I was starting to wrap my head around landscape-scale biodiversity monitoring in 2022, I realized that there aren't really good systems for monitoring insects at that scale, the way there are for birds, mammals, and trees. This is a huge gap in conservation technology, as insects constitute the vast majority of species in terrestrial systems. I found a [paper describing a prototype automated camera trap](https://www.mdpi.com/1424-8220/21/2/343) and I thought my problem was solved. I bought some materials and started building it, but quickly realized that I'd need some help with circuitry and programming, so I recruited my friend Andrew Quitmeyer of Digital Naturalism Laboratories. We built a device loosely based on the paper and called it 'Mothbox'. It was barely functional, and definitly not 'jungle-proof', but it was the start of a long and fruitful collaboration building what will one day be a leading tool in conservation.
+
+In 2023, as a part of a team competing in the Rainforest XPRIZE competition in Singapore, I got funding from Michigan State University to develop Mothbox 2.0, a drone-deployable version that was a lot more functional and survived monsoon rains. Daisy Dent funded some further development of the Mothbox in 2024, and Ponterra also contributed to development in 2025. In March 2024 I received $60,000 as the PI on a grant from Waldlabs, which really turned the Mothbox project into what it is today. The Mothbox team received a further $50,000 from Wildlabs to continue to project in 2025. Mothboxes have not yet been deployed at scale, but have been deployed selectively at some of my sampling points in Azuero.
+
+
+Check out a video we produced describing the Mothbox, and an expedition I planned to Cerro Hoya in Panama, January 2025:
+
+```{r echo=FALSE}
+knitr::include_url("https://www.youtube.com/embed/1LGz3aWpeVE", height = "400px")
+```
+
+### Data analysis
+
+As of September 2025, my main data analysis prerogatives have been to clean up the data from all sampling points and produce biodiversity indicator values for each sampling point. In this context, biodiversity indicators are things like 'soil invertebrate Shannon diversity', 'bird species richness', 'mammal detection rate', etc. 
+
+I do not yet have all of the data processed to that level, still a lot of cleanup left to do. See the tabs at the top of this page for how I approached each dataset.
+
+Beyond that, here are some additional next steps:
+
+- Create accumulation/rarefaction curves to see how effectively I sampled. For mammal species, that line going to be totally flat at this point, but I wonder what the mothbox data would look like at morphospecies level?
+- compile data on cost (money, time, knowledge) per protocol, and cost per indicator.
+- Learn how to model these complex datasets...

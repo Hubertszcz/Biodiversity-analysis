@@ -1,0 +1,13 @@
+
+.two-col {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  justify-content: center;
+  margin-bottom: 1.5em;
+}
+
+.two-col .figure {
+  flex: 1 1 45%;
+  max-width: 45%;
+}

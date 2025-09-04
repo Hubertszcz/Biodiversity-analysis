@@ -9,7 +9,18 @@ output:
 ---
 
 ![](media/gallery/Cricket.jpg)
+**BASED ON OLD SYSTEM, NEED TO UPDATE**
 
+Killed all the R scripts with # so that I could still render the markdown in the meantime.
+
+
+#
+#
+#
+#
+#
+#
+#
 
 Soil invertebrates are incredibly diverse. To put things in perspective: Perching birds (this includes more than half of all bird species worldwide) are in the single order Passeriformes. A single soil sample from a mature forest can contain more than twenty different *orders* of animals! Most soil organisms in the tropics are undescribed species - if you look at a sample under the microscope you are likely to be the first human to ever lay eyes on at least a few species. These tiny creature also play a critical role in the carbon cycle, contributing to decomposition of plant material and cycling nutrients in the soil.
 
@@ -36,9 +47,9 @@ Brief summary of what I will be doing with my soil invert data:
 
 Here is a .csv file with raw data for the invert pilot study:
 
-```{r echo=FALSE}
-xfun::embed_file('docs/data/soil invert data.csv')
-```  
+#```{r echo=FALSE}
+#xfun::embed_file('docs/data/soil invert data.csv')
+#```  
 
 
 
@@ -47,7 +58,7 @@ This spreadsheet is a combination of the invertebrate abundance data and the col
 <details markdown="1">
 <summary><strong>Click here</strong> for code </summary>
 
-```{r setup, message=FALSE, results = 'hide'}
+#```{r setup, message=FALSE, results = 'hide'}
 #setwd("C:/Users/Hubert/Desktop/Biodiversity Monitoring/Biodiversity data analysis/Biodiversity-analysis")
 
 data <- read.csv('docs/data/soil invert data.csv')
@@ -133,7 +144,7 @@ Next up I'll calculate richness, evenness, total abundance, and several diversit
 
 <details markdown="1">
 <summary><strong>Click here</strong> for code </summary>
-```{r, message=FALSE, results = 'hide'}
+#```{r, message=FALSE, results = 'hide'}
 library(vegan)
 
 taxa <- specnumber(wide.data.absolute)                  #Tallying number of taxa
@@ -151,7 +162,7 @@ diversity.indices <- data.summary[,c(1:2,13:17)]
 
 Here's what that data looks like:
 
-```{r, echo=FALSE}
+#```{r, echo=FALSE}
 knitr::kable(diversity.indices[1:10, ], format = "markdown")
 
 ```
@@ -160,7 +171,7 @@ Taxa is the number of unique taxa found in each sample (richness/alpha diversity
 
 Let's summarize averages for each land use type:
 
-```{r, echo=FALSE}
+#```{r, echo=FALSE}
 subset.mature <- subset(data.summary, land.use == "mature")
 subset.nat.regen <- subset(data.summary, land.use == "nat.regen")
 subset.reforestation <- subset(data.summary, land.use == "reforestation")
@@ -204,7 +215,7 @@ Now let's visualize it.
 
 ### Total abundance 
 
-```{r, echo=FALSE, message = FALSE, warning = FALSE}
+#```{r, echo=FALSE, message = FALSE, warning = FALSE}
 
 ##### Abundance
 ggplot(data=mean.values, aes(x=land.use, y=abundance, fill=land.use)) +
@@ -223,7 +234,7 @@ Moisture has a large influence on mass, and can vary considerably (30-50% in the
 
 ### Taxonomic Richness
 
-```{r, echo=FALSE, message = FALSE, warning = FALSE}
+#```{r, echo=FALSE, message = FALSE, warning = FALSE}
 
 ##### Richness
 ggplot(data=mean.values, aes(x=land.use, y=taxa, fill=land.use)) +
@@ -241,7 +252,7 @@ The low richness in teak is perhaps related to nutrient leaching and soil erosio
 ### Shannon Diversity
 
 
-```{r, echo=FALSE, message = FALSE, warning = FALSE}
+#```{r, echo=FALSE, message = FALSE, warning = FALSE}
 
 ##### Shannon diversity
 ggplot(data=mean.values, aes(x=land.use, y=shannon, fill=land.use)) +
@@ -259,7 +270,7 @@ These results are somewhat surprising - Mature forest had the greatest abundance
 
 Let's redo everything excluding sample 53:
 
-```{r, echo=FALSE, message = FALSE, warning = FALSE}
+#```{r, echo=FALSE, message = FALSE, warning = FALSE}
 subset.mature53 <- subset.mature[-c(1), ] 
 
 taxa53 <- c(mean(subset.mature53$taxa),
@@ -322,7 +333,7 @@ Interesting. Mature forest still lags behind natural regeneration.
 
 Let's run some ANOVAs
 
-```{r, message = FALSE, warning = FALSE}
+#```{r, message = FALSE, warning = FALSE}
 
 ### Richness
 anova.soil.taxa <- aov(taxa ~ land.use, data = data.summary)
@@ -346,7 +357,7 @@ Very unfortunately my soil temperature/moisture probe didn't work, and the new t
 <details markdown="1">
 <summary><strong>Click here</strong> for setup code </summary>
 
-```{r, echo=FALSE, message = FALSE, warning = FALSE}
+#```{r, echo=FALSE, message = FALSE, warning = FALSE}
 #some setup:
 
 #Absolute abundance:
@@ -415,7 +426,7 @@ mean.abundance.summaryR <- mean.abundance.summaryR[-c(1,3:7,12)]
 </details>
 
 ### Formicidae [Hymenoptera]
-```{r, echo=FALSE, message = FALSE, warning = FALSE}
+#```{r, echo=FALSE, message = FALSE, warning = FALSE}
 ##### Hymenoptera absolute
 hym.ab <- ggplot(data=mean.abundance.summary, aes(x=land.use, y=Formicidae, fill=land.use)) +
   geom_bar(stat="identity", position=position_dodge(), width = 0.50, aes(x = factor(land.use, level = land.use)), show.legend = FALSE)+
@@ -440,7 +451,7 @@ grid.arrange(hym.ab, hym.rel, ncol=2, widths = c(1.65,2))
 ```
 
 ### Coleoptera
-```{r, echo=FALSE, message = FALSE, warning = FALSE}
+#```{r, echo=FALSE, message = FALSE, warning = FALSE}
 ##### Coleoptera absolute
 col.ab <- ggplot(data=mean.abundance.summary, aes(x=land.use, y=Coleoptera, fill=land.use)) +
   geom_bar(stat="identity", position=position_dodge(), width = 0.50, aes(x = factor(land.use, level = land.use)), show.legend = FALSE)+
@@ -465,7 +476,7 @@ grid.arrange(col.ab, col.rel, ncol=2, widths = c(1.65,2))
 ```
 
 ### Geococcus [Hemiptera]
-```{r, echo=FALSE, message = FALSE, warning = FALSE}
+#```{r, echo=FALSE, message = FALSE, warning = FALSE}
 ##### Geococcus absolute
 hem.ab <- ggplot(data=mean.abundance.summary, aes(x=land.use, y=Geococcus, fill=land.use)) +
   geom_bar(stat="identity", position=position_dodge(), width = 0.50, aes(x = factor(land.use, level = land.use)), show.legend = FALSE)+
@@ -491,7 +502,7 @@ grid.arrange(hem.ab, hem.rel, ncol=2, widths = c(1.65,2))
 ```
 
 ### Protura
-```{r, echo=FALSE, message = FALSE, warning = FALSE}
+#```{r, echo=FALSE, message = FALSE, warning = FALSE}
 ##### Protura absolute
 pro.ab <- ggplot(data=mean.abundance.summary, aes(x=land.use, y=Protura, fill=land.use)) +
   geom_bar(stat="identity", position=position_dodge(), width = 0.50, aes(x = factor(land.use, level = land.use)), show.legend = FALSE)+
@@ -516,7 +527,7 @@ grid.arrange(pro.ab, pro.rel, ncol=2, widths = c(1.65,2))
 ```
 
 ### Collembola
-```{r, echo=FALSE, message = FALSE, warning = FALSE}
+#```{r, echo=FALSE, message = FALSE, warning = FALSE}
 mean.abundance.summaryR$Collembola <- mean.abundance.summaryR$Entomobryomorpha + mean.abundance.summaryR$Poduromorpha + mean.abundance.summaryR$Symphypleona
 mean.abundance.summary$Collembola <- mean.abundance.summary$Entomobryomorpha + mean.abundance.summary$Poduromorpha + mean.abundance.summary$Symphypleona
 
@@ -545,7 +556,7 @@ grid.arrange(coll.ab, coll.rel, ncol=2, widths = c(1.65,2)) + scale_x_discrete(g
 ```
 
 ### Oribatida
-```{r, echo=FALSE, message = FALSE, warning = FALSE}
+#```{r, echo=FALSE, message = FALSE, warning = FALSE}
 ##### Oribatida absolute
 ori.ab <- ggplot(data=mean.abundance.summary, aes(x=land.use, y=Oribatida, fill=land.use)) +
   geom_bar(stat="identity", position=position_dodge(), width = 0.50, aes(x = factor(land.use, level = land.use)), show.legend = FALSE)+
@@ -570,7 +581,7 @@ grid.arrange(ori.ab, ori.rel, ncol=2, widths = c(1.65,2))
 ```
 
 ### Other Acari
-```{r, echo=FALSE, message = FALSE, warning = FALSE}
+#```{r, echo=FALSE, message = FALSE, warning = FALSE}
 ##### other.acari absolute
 aca.ab <- ggplot(data=mean.abundance.summary, aes(x=land.use, y=acari.other, fill=land.use)) +
   geom_bar(stat="identity", position=position_dodge(), width = 0.50, aes(x = factor(land.use, level = land.use)), show.legend = FALSE)+
@@ -596,7 +607,7 @@ grid.arrange(aca.ab, aca.rel, ncol=2, widths = c(1.65,2))
 ```
 
 ### Pseudoscorpiones
-```{r, echo=FALSE, message = FALSE, warning = FALSE}
+#```{r, echo=FALSE, message = FALSE, warning = FALSE}
 ##### Pseudoscorpiones absolute
 pse.ab <- ggplot(data=mean.abundance.summary, aes(x=land.use, y=Pseudoscorpiones, fill=land.use)) +
   geom_bar(stat="identity", position=position_dodge(), width = 0.50, aes(x = factor(land.use, level = land.use)), show.legend = FALSE)+
@@ -622,7 +633,7 @@ grid.arrange(pse.ab, pse.rel, ncol=2, widths = c(1.65,2))
 ```
 
 ### Diplura
-```{r, echo=FALSE, message = FALSE, warning = FALSE}
+#```{r, echo=FALSE, message = FALSE, warning = FALSE}
 ##### Diplura absolute
 dip.ab <- ggplot(data=mean.abundance.summary, aes(x=land.use, y=Diplura, fill=land.use)) +
   geom_bar(stat="identity", position=position_dodge(), width = 0.50, aes(x = factor(land.use, level = land.use)), show.legend = FALSE)+
@@ -647,7 +658,7 @@ grid.arrange(dip.ab, dip.rel, ncol=2, widths = c(1.65,2))
 ```
 
 ### Symphyla
-```{r, echo=FALSE, message = FALSE, warning = FALSE}
+#```{r, echo=FALSE, message = FALSE, warning = FALSE}
 ##### Symphyla absolute
 sym.ab <- ggplot(data=mean.abundance.summary, aes(x=land.use, y=Symphyla, fill=land.use)) +
   geom_bar(stat="identity", position=position_dodge(), width = 0.50, aes(x = factor(land.use, level = land.use)), show.legend = FALSE)+

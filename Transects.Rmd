@@ -8,26 +8,6 @@ output:
       toc_depth: 3
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+80% of the work involved in this kind of fieldwork is just getting to the sampling points, so it makes sense to do as much as possible on a given trip. When we first visit points to collect metadata, we also deploy cameras, audiomoths, and sometimes collect soil at the same time. We try to time camera/audiomoth collection with other occasions when we need to visit points, like during bird point counts or Gentry transects. The goal is to visit each point the minimum number of times, and to collect as much data as possible every time.
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+This ethos led me to develop the mammal transect protocol. Field crews are equipped with Gaia GPS Pro apps on their phones, which help them navigate to sampling points. Gaia also gives accurate tracking information that can automatically be uploaded online. Each time the crew goes into the field, they are also running a mammal transect wherever they go. 

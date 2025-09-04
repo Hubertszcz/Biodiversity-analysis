@@ -1,0 +1,46 @@
+/* knitr-style figures: <div class="figure"><p class="caption">... */
+div.figure > p.caption {
+  font-size: 1.15rem !important;
+  color: #000;
+  text-align: center;
+}
+
+/* bootstrap/pandoc-style: <figure><figcaption>, or .figure .figure-caption */
+figure > figcaption,
+.figure .figure-caption,
+.figure .caption {
+  font-size: 1.15rem !important;
+  color: #000;
+  text-align: center;
+}
+
+/* optional: center images in knitr figures */
+div.figure { text-align: center; }
+
+/* Add spacing between paragraphs */
+p {
+  margin-bottom: 1em;   /* adjust value to taste */
+}
+
+
+/* For knitr figures: <div class="figure"><img><p class="caption"> */
+div.figure {
+  display: flex;
+  flex-direction: column;
+}
+
+div.figure > p.caption {
+  order: -1;       /* put caption before the image */
+  margin-bottom: 0.5em;
+}
+
+/* For HTML5 figures: <figure><img><figcaption> */
+figure {
+  display: flex;
+  flex-direction: column;
+}
+
+figure > figcaption {
+  order: -1;
+  margin-bottom: 0.5em;
+}

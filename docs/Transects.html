@@ -2109,8 +2109,57 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <script src="site_libs/webcomponents-2.0.0/webcomponents.js"></script>
   <script src="site_libs/distill-2.2.21/template.v2.js"></script>
   <!--radix_placeholder_site_in_header-->
+  <style type="text/css">
+  /* knitr-style figures: <div class="figure"><p class="caption">... */
+  div.figure > p.caption {
+    font-size: 1.15rem !important;
+    color: #000;
+    text-align: center;
+  }
+
+  /* bootstrap/pandoc-style: <figure><figcaption>, or .figure .figure-caption */
+  figure > figcaption,
+  .figure .figure-caption,
+  .figure .caption {
+    font-size: 1.15rem !important;
+    color: #000;
+    text-align: center;
+  }
+
+  /* optional: center images in knitr figures */
+  div.figure { text-align: center; }
+
+  /* Add spacing between paragraphs */
+  p {
+    margin-bottom: 1em;   /* adjust value to taste */
+  }
+
+
+  /* For knitr figures: <div class="figure"><img><p class="caption"> */
+  div.figure {
+    display: flex;
+    flex-direction: column;
+  }
+
+  div.figure > p.caption {
+    order: -1;       /* put caption before the image */
+    margin-bottom: 0.5em;
+  }
+
+  /* For HTML5 figures: <figure><img><figcaption> */
+  figure {
+    display: flex;
+    flex-direction: column;
+  }
+
+  figure > figcaption {
+    order: -1;
+    margin-bottom: 0.5em;
+  }
+  </style>
   <!--/radix_placeholder_site_in_header-->
 
+  <link rel="stylesheet" href="styles.css" type="text/css"/>
 
 </head>
 
@@ -2136,6 +2185,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <a href="index.html">
 <i class="fa fa-home" aria-hidden="true"></i>
 </a>
+<a href="Figures.html">Figures</a>
 <div class="nav-dropdown">
 <button class="nav-dropbtn">
 Insects
@@ -2204,37 +2254,9 @@ Mammals
 
 
 <div class="d-article">
-<div class="d-contents d-contents-float">
-<nav class="l-text toc figcaption" id="TOC">
-<h3>Contents</h3>
-<ul>
-<li><a href="#r-markdown" id="toc-r-markdown">R Markdown</a></li>
-<li><a href="#including-plots" id="toc-including-plots">Including Plots</a></li>
-</ul>
-</nav>
-</div>
-<h2 id="r-markdown">R Markdown</h2>
-<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
-<p>When you click the <strong>Knit</strong> button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>cars</span><span class='op'>)</span></span></code></pre>
-</div>
-<pre><code>     speed           dist       
- Min.   : 4.0   Min.   :  2.00  
- 1st Qu.:12.0   1st Qu.: 26.00  
- Median :15.0   Median : 36.00  
- Mean   :15.4   Mean   : 42.98  
- 3rd Qu.:19.0   3rd Qu.: 56.00  
- Max.   :25.0   Max.   :120.00  </code></pre>
-</div>
-<h2 id="including-plots">Including Plots</h2>
-<p>You can also embed plots, for example:</p>
-<div class="layout-chunk" data-layout="l-body">
-<p><img src="Transects_files/figure-html5/pressure-1.png" width="624" /></p>
-</div>
-<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<p>80% of the work involved in this kind of fieldwork is just getting to the sampling points, so it makes sense to do as much as possible on a given trip. When we first visit points to collect metadata, we also deploy cameras, audiomoths, and sometimes collect soil at the same time. We try to time camera/audiomoth collection with other occasions when we need to visit points, like during bird point counts or Gentry transects. The goal is to visit each point the minimum number of times, and to collect as much data as possible every time.</p>
+<p>This ethos led me to develop the mammal transect protocol. Field crews are equipped with Gaia GPS Pro apps on their phones, which help them navigate to sampling points. Gaia also gives accurate tracking information that can automatically be uploaded online. Each time the crew goes into the field, they are also running a mammal transect wherever they go.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>

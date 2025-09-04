@@ -1,0 +1,83 @@
+---
+title: "Figures"
+description: |
+  Prelimenary data visualization
+output:
+    distill::distill_article:
+      toc: true
+      toc_depth: 3
+      css: styles.css
+---
+
+Here are some figures I generated with a different datasets (primarily Ponterra Points PON001-100). I'll get this updated eventually to be consistent with the sample dataset.
+
+### Mammals
+
+![mammal_mean_detection_rate](media/gallery/figures/mean_mammal_detection_rate.png)
+
+![mammal_mean_richness](media/gallery/figures/mean_mammal_richness.png)
+
+
+### Bird point counts
+
+![bird_mean_abundance](media/gallery/figures/bird_mean_abundance.png)
+
+![bird_mean_richness](media/gallery/figures/bird_mean_richness.png)
+
+![bird_mean_shannon](media/gallery/figures/bird_mean_shannon.png)
+
+![bird_mean_simpson](media/gallery/figures/bird_mean_simpson.png)
+
+### Bird passive acoustic monitoring
+
+![birdnet_mean_callfrequency](media/gallery/figures/birdnet_mean_callfrequency.png)
+
+![birdnet_mean_richness](media/gallery/figures/birdnet_mean_richness.png)
+
+### Trees
+
+![tree_mean_abundance](media/gallery/figures/tree_mean_abundance.png)
+
+![tree_mean_richness](media/gallery/figures/tree_mean_richness.png)
+
+![tree_mean_shannon](media/gallery/figures/tree_mean_shannon.png)
+
+![tree_mean_simpson](media/gallery/figures/tree_mean_simpson.png)
+
+![tree_mean_stem_density](media/gallery/figures/tree_mean_stem_density.png)
+
+![tree_mean_basal_area](media/gallery/figures/tree_mean_basal_area.png)
+
+![tree_mean_quadratic_mean_diameter](media/gallery/figures/tree_mean_quadratic_mean_diameter.png)
+
+### Soil Invertebrates
+
+![invert_mean_abundance](media/gallery/figures/invert_mean_abundance.png)
+
+![invert_mean_richness](media/gallery/figures/invert_mean_richness.png)
+
+![invert_mean_shannon](media/gallery/figures/invert_mean_shannon.png)
+
+![invert_mean_simpson](media/gallery/figures/invert_mean_simpson.png)
+
+### Mothbox
+
+![mothbox detections and forest type](media/gallery/figures/mothbox detections and forest type.png)
+
+![mothbox richness and forest type](media/gallery/figures/mothbox richness and forest type.png)
+
+### Cow detections
+
+Made this figure to Help Ponterra conceptualize landowner non-compliance with contracts (which state no cows are allowed into reforested areas)
+
+![cow_detections_per_finca](media/gallery/figures/cow_detections_per_finca.png)
+
+### Invasive plant cover
+
+![Invasive cover per land use](media/gallery/figures/Invasive cover per land use.png)
+
+![Top 10 Invasive Species By Number Of Transects Present](media/gallery/figures/Top 10 Invasive Species By Number Of Transects Present.png)
+
+![Invasive Species Relative Association By Land Use](media/gallery/figures/Invasive Species Relative Association By Land Use.png)
+
+![Invasive species by landowner (all fincas)](media/gallery/figures/Invasive species by landowner (all fincas).png)

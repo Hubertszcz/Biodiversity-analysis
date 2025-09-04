@@ -8,18 +8,19 @@ output:
       toc_depth: 3
 ---
 
-Each sampling point had two
+Each sampling point had two bird point counts, on consecutive days. The point counts were conducted starting 15 minutes before sunrise, and 
 
 
+There are two csv files for this analysis, one with deployment metadata and one with bird point count data: 
 
-There are two csv files for this analysis, one with sampling point metadata and one with bird point count data: 
 ```{r echo=FALSE}
-#xfun::embed_file('docs/data/Ponterra deployments PON001-150.csv')
+#xfun::embed_file('docs/data/ETH dry season deployments AZ001-053.csv')
 ```  
 
 ```{r echo=FALSE}
-#xfun::embed_file('docs/data/Ponterra point counts PON001-100.csv')
+#xfun::embed_file('docs/data/ETH dry season birds AZ001-053.csv')
 ```  
+
 
 
 Here is how I set up the environment and did some initial data cleanup:
@@ -38,8 +39,8 @@ library(viridis)
 library(tidyr)
 
 # Load the datasets
-metadata <- read.csv('docs/data/Ponterra deployments PON001-150.csv')
-data <- read.csv('docs/data/Ponterra point counts PON001-100.csv')
+metadata <- read.csv('media/data/ETH dry season deployments AZ001-053.csv')
+data <- read.csv('media/data/ETH dry season birds AZ001-053.csv')
 
 #data cleanup
 

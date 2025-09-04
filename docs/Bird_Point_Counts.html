@@ -2109,8 +2109,57 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <script src="site_libs/webcomponents-2.0.0/webcomponents.js"></script>
   <script src="site_libs/distill-2.2.21/template.v2.js"></script>
   <!--radix_placeholder_site_in_header-->
+  <style type="text/css">
+  /* knitr-style figures: <div class="figure"><p class="caption">... */
+  div.figure > p.caption {
+    font-size: 1.15rem !important;
+    color: #000;
+    text-align: center;
+  }
+
+  /* bootstrap/pandoc-style: <figure><figcaption>, or .figure .figure-caption */
+  figure > figcaption,
+  .figure .figure-caption,
+  .figure .caption {
+    font-size: 1.15rem !important;
+    color: #000;
+    text-align: center;
+  }
+
+  /* optional: center images in knitr figures */
+  div.figure { text-align: center; }
+
+  /* Add spacing between paragraphs */
+  p {
+    margin-bottom: 1em;   /* adjust value to taste */
+  }
+
+
+  /* For knitr figures: <div class="figure"><img><p class="caption"> */
+  div.figure {
+    display: flex;
+    flex-direction: column;
+  }
+
+  div.figure > p.caption {
+    order: -1;       /* put caption before the image */
+    margin-bottom: 0.5em;
+  }
+
+  /* For HTML5 figures: <figure><img><figcaption> */
+  figure {
+    display: flex;
+    flex-direction: column;
+  }
+
+  figure > figcaption {
+    order: -1;
+    margin-bottom: 0.5em;
+  }
+  </style>
   <!--/radix_placeholder_site_in_header-->
 
+  <link rel="stylesheet" href="styles.css" type="text/css"/>
 
 </head>
 
@@ -2136,6 +2185,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <a href="index.html">
 <i class="fa fa-home" aria-hidden="true"></i>
 </a>
+<a href="Figures.html">Figures</a>
 <div class="nav-dropdown">
 <button class="nav-dropbtn">
 Insects
@@ -2204,8 +2254,8 @@ Mammals
 
 
 <div class="d-article">
-<p>Each sampling point had two</p>
-There are two csv files for this analysis, one with sampling point metadata and one with bird point count data:
+<p>Each sampling point had two bird point counts, on consecutive days. The point counts were conducted starting 15 minutes before sunrise, and</p>
+<p>There are two csv files for this analysis, one with deployment metadata and one with bird point count data:</p>
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
@@ -2229,8 +2279,8 @@ There are two csv files for this analysis, one with sampling point metadata and 
 <span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyr.tidyverse.org'>tidyr</a></span><span class='op'>)</span></span>
 <span></span>
 <span><span class='co'># Load the datasets</span></span>
-<span><span class='va'>metadata</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='st'>'docs/data/Ponterra deployments PON001-150.csv'</span><span class='op'>)</span></span>
-<span><span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='st'>'docs/data/Ponterra point counts PON001-100.csv'</span><span class='op'>)</span></span>
+<span><span class='va'>metadata</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='st'>'media/data/ETH dry season deployments AZ001-053.csv'</span><span class='op'>)</span></span>
+<span><span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='st'>'media/data/ETH dry season birds AZ001-053.csv'</span><span class='op'>)</span></span>
 <span></span>
 <span><span class='co'>#data cleanup</span></span>
 <span></span>

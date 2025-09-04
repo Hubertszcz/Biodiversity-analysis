@@ -14,6 +14,8 @@ navbar:
   # - text: "Home"
     - icon: fa-home
       href: index.html
+    - text: "Figures"
+      href: Figures.html
     - text: "Insects"
       menu:
         - text: "Soil Fauna"
@@ -47,4 +49,8 @@ navbar:
     - icon: fa-github fa-lg
       href: https://github.com/Hubertszcz/Biodiversity-analysis      
        
-output: distill::distill_article
+output:
+  distill::distill_article:
+    self_contained: false
+    css: styles.css
+
