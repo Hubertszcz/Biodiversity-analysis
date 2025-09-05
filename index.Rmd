@@ -57,6 +57,10 @@ A sample data set can be found here:
 xfun::embed_file("media/data/data.zip")
 ```  
 
+ACTUALLY DELETING THIS SAMPLE DATA FOR NOW
+
+Too many clones of my r markdown, not sure where they're coming from
+
 ### Key Research Questions
 
 1. **Most Representative Indicators for Biodiversity:** Which indicators are most effective for assessing and representing multi-taxa biodiversity in the context of tropical forest restoration projects?
