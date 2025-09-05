@@ -2109,57 +2109,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <script src="site_libs/webcomponents-2.0.0/webcomponents.js"></script>
   <script src="site_libs/distill-2.2.21/template.v2.js"></script>
   <!--radix_placeholder_site_in_header-->
-  <style type="text/css">
-  /* knitr-style figures: <div class="figure"><p class="caption">... */
-  div.figure > p.caption {
-    font-size: 1.15rem !important;
-    color: #000;
-    text-align: center;
-  }
-
-  /* bootstrap/pandoc-style: <figure><figcaption>, or .figure .figure-caption */
-  figure > figcaption,
-  .figure .figure-caption,
-  .figure .caption {
-    font-size: 1.15rem !important;
-    color: #000;
-    text-align: center;
-  }
-
-  /* optional: center images in knitr figures */
-  div.figure { text-align: center; }
-
-  /* Add spacing between paragraphs */
-  p {
-    margin-bottom: 1em;   /* adjust value to taste */
-  }
-
-
-  /* For knitr figures: <div class="figure"><img><p class="caption"> */
-  div.figure {
-    display: flex;
-    flex-direction: column;
-  }
-
-  div.figure > p.caption {
-    order: -1;       /* put caption before the image */
-    margin-bottom: 0.5em;
-  }
-
-  /* For HTML5 figures: <figure><img><figcaption> */
-  figure {
-    display: flex;
-    flex-direction: column;
-  }
-
-  figure > figcaption {
-    order: -1;
-    margin-bottom: 0.5em;
-  }
-  </style>
   <!--/radix_placeholder_site_in_header-->
 
-  <link rel="stylesheet" href="styles.css" type="text/css"/>
 
 </head>
 
@@ -2259,8 +2210,13 @@ Mammals
 <h3>Contents</h3>
 <ul>
 <li><a href="#data-cleanup" id="toc-data-cleanup">Data cleanup</a></li>
+<li><a href="#section" id="toc-section"></a>
+<ul>
 <li><a href="#composition-indicators" id="toc-composition-indicators">Composition indicators</a></li>
 <li><a href="#structure-indicators" id="toc-structure-indicators">Structure indicators</a></li>
+<li><a href="#combining-with-land-use-data" id="toc-combining-with-land-use-data">Combining with land use data</a></li>
+<li><a href="#visualization" id="toc-visualization">Visualization</a></li>
+</ul></li>
 </ul>
 </nav>
 </div>
@@ -2276,6 +2232,7 @@ Mammals
 <div class="layout-chunk" data-layout="l-body">
 <a href="data:text/csv;base64,cG9pbnQsZ2VudHJ5X3RyYW5zZWN0LGRhdGUsc2l0ZSxkaXJlY3Rpb24sZW5kLmxhdCxlbmQubG9uZyxjcmV3MSxjcmV3MixjcmV3MyxjcmV3NCxjcmV3NSxub3Rlcw0KQVowMDEsQVpHRU4wMDEsMjAyNDA4MTIsQWNob3RpbmVzLFdlc3QsNy40MTQzNywtODAuMTY5ODYsSlMsSlYsLCwsIlNlIHRvbW8gZWwgVywgcG9ycXVlIE4tUyBlc3RhYmEgZWwgcmlhY2h1ZWxvLiBCb3NxdWUgc2VjdW5kYXJpbyBkb21pbmFkbyBwb3IgbGlhbmEgQmlnbm9uaWEsIHNpbiBoZXJiYWNlYWUiDQpBWjAwMixBWkdFTjAwMiwyMDI0MDgxMixBY2hvdGluZXMsTm9ydGgsNy40MTUyOSwtODAuMTY3MixKUyxKViwsLCwiUGFydGUgZGVsIHRyYW5zZWN0byBlc3RhIGVuIHVuIHNlbmRlcm8gKG1ldHJvIDE4IGFsIDIzKSwgYm9zcXVlIHNlY3VuZGFyaW8gZG9taW5hbnRlIGRlIGxpYW5hIEJpZ25vbmlhLCBzaW4gaGVyYmFjZWFzLiBEb21pbmFuY2lhIGFyYm9yZWEgZGUgVGFiZWJ1aWEgcm9zZWEgeSBIYW5kcm9hbnRodXMgZ3VheWFjYW4uIg0KQVowMDMsQVpHRU4wMDMsMjAyNDA4MTIsQWNob3RpbmVzLE5vcnRoLDcuNDE1MjEsLTgwLjE2NDUyLEpTLEpWLCwsLCJCb3NxdWUgc2VjdW5kYXJpbyBkb21pbmFkbyBwb3IgbGEgbGlhbmEgQmlnbm9uaWEsIHNpbiBoZXJiYWNlYXMuIERvbWluYW5jaWEgYXJib3JlYSBkZSBUYWJlYnVpYSByb3NlYSB5IENhbHljb3BoeWxsdW0gY2FuZGlkaXNzaW11bSwgbm9zIGRlc3ZpYW1vcyAxMCBncmFkb3MgYWwgRSBwb3IgcHJlc2VuY2lhIGRlIGFiZWphcyBhZnJpY2FuYXMsIHNlIGZvcm1hIHVuIHJpYWNodWVsbyBlZmltZXJvIGFsIGxsb3Zlci4iDQpBWjAwNCxBWkdFTjAwNCwsLCwsLCwsLCwsDQpBWjAwNSxBWkdFTjAwNSwsLCwsLCwsLCwsDQpBWjAwNixBWkdFTjAwNiwsLCwsLCwsLCwsDQpBWjAwNyxBWkdFTjAwNywsLCwsLCwsLCwsDQpBWjAwOCxBWkdFTjAwOCwsLCwsLCwsLCwsDQpBWjAwOSxBWkdFTjAwOSwsLCwsLCwsLCwsDQpBWjAxMCxBWkdFTjAxMCwyMDI0MDgxNCxWZXJub20sTm9ydGgsNy40MjA0MywtODAuMTY0NyxKUyxKViwsLCwiUGFzdGl6YWwsIGRvbWluYW5jaWEgYXJib3JlYSBkZSBIYW5kcm9hbnRodXMgZ3VheWFjYW4geSBHdWF6dW1hIHVsbWlmb2xpYS4iDQpBWjAxMSxBWkdFTjAxMSwyMDI0MDgxNCxSdWl6LE5vcnRoLDcuNDIwMDksLTgwLjE2MjE4LEpTLEpWLCwsLCJObyBzZSBlbmNvbnRy8yBlbCBUYWcsIHBvciBsYSBjYW50aWRhZCBkZSBQb2FjZWFlIGRlIGdyYW4gYWx0dXJhLiBQYXN0aXphbCwgZG9taW5hbmNpYSBhcmJvcmVhIGRlIEd1YXp1bWEgdWxtaWZvbGlhLiINCkFaMDEyLEFaR0VOMDEyLDIwMjQwODE0LFJ1aXosTm9ydGgsNy40MjAyNCwtODAuMTU5OTEsSlMsSlYsLCwsIkJvcmRlIGRlIHBhc3RpemFsLCBwbGFudGFjafNuIGVzcG9yYWRpY2EgZGUgR3VhenVtYSB1bG1pZm9saWEsIGFzb2NpYWRvIGNvbiBWYWNoZWxsaWEgY29sbGluc2lpLiINCkFaMDEzLEFaR0VOMDEzLDIwMjQwODE0LFJ1aXosTm9ydGgsNy40MjI2NCwtODAuMTYyMTcsSlMsSlYsLCwsIk5vIHNlIGVuY29udHLzIGVsIFRhZywgcG9yIGxhIGNhbnRpZGFkIGRlIFBvYWNlYWUgZGUgZ3JhbiBhbHR1cmEuIFBhc3RpemFsLCBkb21pbmFuY2lhIGFyYm9yZWEgZGUgSGFuZHJvYW50aHVzIGd1YXlhY2FuLCBhc29jaWFkbyBjb24gVmFjaGVsbGlhIGNvbGxpbnNpaS4iDQpBWjAxNCxBWkdFTjAxNCwyMDI0MDgxNCxSdWl6LE5vcnRoLDcuNDIyNjUsLTgwLjE1OTQzLEpTLEpWLCwsLCJQYXN0aXphbCwgY29uIOFyYm9sZXMsIGVuIHN1IG1heW9y7WEgZGUgQWxpYmVydGlhIGVkdWxpcywgdGFtYmnpbiBkZSBQaXBlciBzcC4gWSBHdWF6dW1hIHVsbWlmb2xpYS4iDQpBWjAxNSxBWkdFTjAxNSwyMDI0MDgxMixTYXJhIExlZSxOb3J0aCw3LjQyNDgyLC04MC4xNTY0MSxKUyxKViwsLCwiUGxhbnRhY2nzbiBkZSBUZWN0b25hIGdyYW5kaXMsIGFzb2NpYWRvIGNvbiBWYWNoZWxsaWEgY29sbGluc2lpIHkgRGFsYmVyZ2lhIHJldHVzYS4iDQpBWjAxNixBWkdFTjAxNiwyMDI0MDgxMixTYXJhIExlZSxOb3J0aCw3LjQyNzQ2LC04MC4xNTY1NixKUyxKViwsLCwiUGxhbnRhY2nzbiBkZSBUZWN0b25hIGdyYW5kaXMsIGFzb2NpYWRvIGNvbiBWYWNoZWxsaWEgY29sbGluc2lpLiINCkFaMDE3LEFaR0VOMDE3LCwsLCwsLCwsLCwNCkFaMDE4LEFaR0VOMDE4LCwsLCwsLCwsLCwNCkFaMDE5LEFaR0VOMDE5LCwsLCwsLCwsLCwNCkFaMDIwLEFaR0VOMDIwLCwsLCwsLCwsLCwNCkFaMDIxLEFaR0VOMDIxLCwsLCwsLCwsLCwNCkFaMDIyLEFaR0VOMDIyLCwsLCwsLCwsLCwNCkFaMDIzLEFaR0VOMDIzLCwsLCwsLCwsLCwNCkFaMDI0LEFaR0VOMDI0LCwsLCwsLCwsLCwNCkFaMDI1LEFaR0VOMDI1LDIwMjQwODEzLENhcmRlbmFzLE5vcnRoLDcuNDQyMTcsLTgwLjE5Njg4LEpTLEpWLCwsLCJCb3NxdWUgcmliZXJl8W8sIGVsIHNvdG9ib3NxdWUgY29uIFNlbGFnaW5lbGxhIGhvcml6b250YWxpcywgZG9taW5hbmNpYSBhcmJvcmVhIGRlIFBvY2hvdGEgZmVuZGxlcmkgeSBhc29jaWFkbyBjb24gVmFjaGVsbGlhIGNvbGxpbnNpaS4iDQpBWjAyNixBWkdFTjAyNiwyMDI0MDgxMyxDYXJkZW5hcyxOb3J0aCw3LjQ0MjAxLC04MC4xOTQ2MixKUyxKViwsLCwiU2luIG1hZGVyYSBtdWVydGEsIGVsIHRyYW5zZWN0byBlbiBjdWFscXVpZXIgZGlyZWNjafNuIGRhIGEgdW5hIHF1ZWJyYWRhLiBCb3NxdWUgcmliZXJl8W8sIGRvbWluYW5jaWEgYXJib3JlYSBkZSBBbmFjYXJkaXVtIGV4Y2Vsc3VtIHkgTHVlaGVhIHNlZW1hbm5paS4iDQpBWjAyNyxBWkdFTjAyNywyMDI0MDgxMyxDYXJkZW5hcyxOb3J0aCw3LjQ0MjMzOCwtODAuMTkxNjQsSlMsSlYsLCwsIkhlcmJhemFsIChCYWNoaWFyaWEgZGVjdW1iZW5zKSB5IEN5cGVydXMgc3AuLCBwYWphIGNvcnRhZGVyYS4gRG9taW5hbmNpYSBhcmJvcmVhIGRlIEd1YXp1bWEgdWxtaWZvbGlhLiINCkFaMDI4LEFaR0VOMDI4LCwsLCwsLCwsLCwNCkFaMDI5LEFaR0VOMDI5LCwsLCwsLCwsLCwNCkFaMDMwLEFaR0VOMDMwLDIwMjQwODEzLENhcmRlbmFzLE5vcnRoLDcuNDQ0ODksLTgwLjE5NjkzLEpTLEpWLCwsLCJCb3NxdWUgcXVlIGJvcmRlYSBlbCBwYXJ0aXphbCwgZG9taW5hbmNpYSBhcmJvcmVhIGRlIEd1YXp1bWEgdWxtaWZvbGlhLiINCkFaMDMxLEFaR0VOMDMxLDIwMjQwODEzLENhcmRlbmFzLE5vcnRoLDcuNDQ0NTksLTgwLjE5NDM0LEpTLEpWLCwsLCJCb3NxdWUgcmliZXJl8W8tZ2FsZXJpYSwgY2VyY2FubyBhbCBwYXN0aXphbC4iDQpBWjAzMixBWkdFTjAzMiwyMDI0MDgxMyxDYXJkZW5hcyxOb3J0aCw3LjQ0NDg0LC04MC4xOTEzOSxKUyxKViwsLCwiQm9zcXVlIGRlIGdhbGVy7WEsIGRvbWluYW5jaWEgZGUgbGEgZXNwZWNpZSBhcmJvcmVhIEh1cmEgY3JlcGl0YW5zLiINCkFaMDMzLEFaR0VOMDMzLCwsLCwsLCwsLCwNCkFaMDM0LEFaR0VOMDM0LDIwMjQwMjE1LEVjbyBWZW5hbyxTb3V0aCwsLEpWLEhTLCwsLE5vcnRoIHRyYW5zZWN0IGNyb3NzZXMgcml2ZXJiZWQgdGhhdCBpcyBncmVhdGVyIHRoZW4gM20gd2lkZSBhbmQgZW50ZXJzIHBhc3R1cmUuDQpBWjAzNSxBWkdFTjAzNSwyMDI0MDkyNyxQYW5hbWFlcyxTb3V0aCw3LjQzNzUzLC04MC4wOTM5MSxKUyxKVixBQSwsLCJQYXN0aXphbCwgaGFj7WEgZWwgbm9ydGUgbm8gaGF5IOFyYm9sZXMuIEhheSDhcmJvbGVzIHkgYXJidXN0b3MgYWNoYXBhcnJhZG9zIChyYXN0cm9qbyksIHBlcXVl8WEgcXVlYnJhZGEgZGUgYWd1YSBlbiBlbCBtZXRybyA0MC01MCBkZWwgdHJhbnNlY3RvLiINCkFaMDM2LEFaR0VOMDM2LDIwMjQwOTI3LFBhbmFtYWVzLE5vcnRoLDcuNDQyMTUsLTgwLjA5MDEyLEpTLEpWLEFBLCwsIkN1bHRpdm8gZGUgVGVjdG9uYSBncmFuZGlzLCBlbiBjb25qdW50byBjb24gcmFzdHJvam8uIg0KQVowMzcsQVpHRU4wMzcsMjAyNDA5MjcsUGFuYW1hZXMsTm9ydGgsNy40NDQwNCwtODAuMDkxMjMsSlMsSlYsQUEsLCwiQ3VsdGl2byBkZSBUZWN0b25hIGdyYW5kaXMsIGVuIGNvbmp1bnRvIGNvbiByYXN0cm9qby4iDQpBWjAzOCxBWkdFTjAzOCwyMDI0MDkyNixQYW5hbWFlcyxTb3V0aCw3LjQ0MzgyLC04MC4wNzM5OCxKUyxKVixBQSwsLCJQYXN0aXphbCwgcmFzdHJvam8gZGVzcHXpcyBkZSBsb3MgMzAgbWV0cm8gZGVsIHRyYW5zZWN0by4gQ3VsdGl2byBkZSDhcmJvbGVzIG1hZGVyYWJsZXMuIg0KQVowMzksQVpHRU4wMzksMjAyNDA5MjUsUGFuYW1hZXMsU291dGgsNy40NDY2MSwtODAuMDg1NDQsSlMsSlYsQUEsLCwiQm9zcXVlIGJpZW4gZHJlbmFkbywgYm9zcXVlIGEgb3JpbGxhIGRlbCBy7W8uIMFyYm9sZXMgZGUgMjUgbWV0cm9zIGRlIGFsdHVyYSwgYWJ1bmRhbmNpYSBkZSBCYWN0cmlzIG1ham9yLiINCkFaMDQwLEFaR0VOMDQwLDIwMjQwOTI1LFBhbmFtYWVzLFNvdXRoLDcuNDQ3MzQsLTgwLjA4MjkxLEpTLEpWLEFBLCwsIlJhc3Ryb2pvIGRlbnNvLCBIb21hbG9sZXBpcyBjZWRyb24gZW4gYWJ1bmRhbmNpYSwg4XJib2xlcyBtZW5vciBkZSAxNSBtZXRyb3MgZGUgYWx0dXJhLiINCkFaMDQxLEFaR0VOMDQxLDIwMjQwOTI1LFBhbmFtYWVzLFNvdXRoLDcuNDQ0Njc3LC04MC4wODEwNCxKUyxKVixBQSwsLCLBcmVhIGludW5kYWJsZSwgZG9taW5hbmNpYSBkZSBDb2Njb2xvYmEgY2FyYWNhc2FuYSwgQmFjdHJpcyBtYWpvciwgQ29tYnJldHVtIGRlY2FuZHJ1bSB5IFRyaWNoYW50aGVyYSBnaWdhbnRlYS4iDQpBWjA0MixBWkdFTjA0MiwyMDI0MDkyNixQYW5hbWFlcyxOb3J0aCw3LjQ0NzM1LC04MC4wNzgyMSxKUyxKVixBQSwsLCJCb3NxdWUgc2VjdW5kYXJpbyB0ZW1wcmFubywg4XJib2xlcyBubyBtYXlvcmVzIGRlIDEwIG1ldHJvcywgbXVjaG9zIGFyYnVzdG9zIGRlIHJhbWlmaWNhY2nzbiBiYWphIHkgbXVjaGFzIGxpYW5hcy4gQ2VyY2EgZGUgY3VlcnBvIGRlIGFndWEuIg0KQVowNDMsQVpHRU4wNDMsMjAyNDA5MjYsUGFuYW1hZXMsRWFzdGgsNy40NDcxOSwtODAuMDcxMDQsSlMsSlYsQUEsLCwiUGFzdGl6YWwsIOFyYm9sZXMgaGFjaWVuZG8gZGUgc29tYnJhLCDhcmJvbGVzIHNvbiBjYXJhY3RlcmlzdGljb3MgZGUgcGFzdGl6YWxlcyAoQnlyc29uaW1hIGNyYXNzaWZvbGlhLCBDb3JkaWEgYWxsaW9kb3JhIHkgVGFiZWJ1aWEgcm9zZWEpLiINCkFaMDQ0LEFaR0VOMDQ0LDIwMjQwOTIzLFBhbmFtYWVzLE5vcnRoLDcuNDQ5OTIsLTgwLjA4Nzg0LEpTLEpWLEFBLCwsQm9zcXVlIHNlY3VuZGFyaW8gY29uIOFyYm9sZXMgZGUgMjAtMzAgbWV0cm9zIGRlIGFsdHVyYS4NCkFaMDQ1LEFaR0VOMDQ1LDIwMjQwOTI1LFBhbmFtYWVzLFNvdXRoLDcuNDQ5MSwsSlMsSlYsQUEsLCwiUHJlZG9taW5hbmN1YSBkZSBQaXRoZWNlbGxvYml1bSBoeW1lbmFlaWZvbGl1bSwgYm9zcXVlIHNlY3VuZGFyaW8gdGVtcHJhbm8sIOFyYm9sZXMgbWFub3JlcyBkZSAxNSBtZXRyb3MgZGUgYWx0dXJhLCBzdWVsbyBtdXkgZHJlbmFkaSB5IG11Y2hhcyBsaWFuYXMuIg0KQVowNDYsQVpHRU4wNDYsMjAyNDA5MjQsUGFuYW1hZXMsTm9ydGgsNy40NDk4MSwtODAuMDgzMzgsSlMsSlYsQUEsLCwiQm9zcXVlIHNlY3VuZGFyaW8gdGVtcHJhbm8sIOFyYm9sZXMgZGUgMTUgbWV0cm9zIGRlIGFsdHVyYSwgbGlhbmEgeSBhcmJ1c3RvcyBlbiBhYnVuZGFuY2lhLiINCkFaMDQ3LEFaR0VOMDQ3LDIwMjQwOTI0LFBhbmFtYWVzLFNvdXRoLDcuNDQ5MTQsLTgwLjA4MDY5LEpTLEpWLEFBLCwsIlJlZm9yZXN0YWNp824gZGUgYXByb3hpbWFkYW1lbnRlIDE1IGHxb3MsIHRyYW5zZWN0byBjZXJjYSBhIG9yaWxsYSBkZWwgc2VuZGVybywgwXJlYSBhYmllcnRhLiINCkFaMDQ4LEFaR0VOMDQ4LDIwMjQwOTI2LFBhbmFtYWVzLE5vcnRoLDcuNDQ5NjcsLTgwLjA4NzkzLEpTLEpWLEFBLCwsIkx1Z2FyIGRlIGN1bHRpdm8sIGRlIDIwIGHxb3MuIE1vbm9jdWx0aXZvIGVuIGNvbmp1bnRvIGNvbiBwbGFudGFjafNuIGRlIHJlZ2VuZXJhY2nzbi4iDQpBWjA0OSxBWkdFTjA0OSwyMDI0MDkyMyxQYW5hbWFlcyxOb3J0aCw3LjQ1MjI3LC04MC4wNjU2OCxKUyxKVixBQSwsLCJCb3NxdWUgc2VjdW5kYXJpbyB0ZW1wcmFubywgZGUgZGl2ZXJzaWRhZCBkZSBlc3BlY3VlcywgZG9taW5hbmNpYSBkZSBHZW5pcGEgYW1lcmljYW5hLCBMdWVoZWEgc2VlbWFubmlpIHkgSG9tYWxvbGVwaXMgY2Vkcm9uLiINCkFaMDUwLEFaR0VOMDUwLDIwMjQwOTI0LFBhbmFtYWVzLE5vcnRoLDcuNDUyMDQsLTgwLjA4MyxKUyxKVixBQSwsLCJCb3NxdWUgc2VjdW5kYXJpbyB0ZSxwcmFubywgZW4gc2FtYnJhbmRpbyBkZSBUZWN0b25hIGdyYW5kaXMsIOFyYm9sZXMgY29uIGFsdHVyYSBt4XhpbWEgZGUgMTAgbWV0cm9zLCBIZWxpY29uaWEgc3AuIEVuIGdyYW4gY2FudGlkYWQgYWwgZmluYWwgZGVsIHRyYW5zZWN0by4iDQpBWjA1MSxBWkdFTjA1MSwyMDI0MDkyMyxQYW5hbWFlcyxOb3J0aCw3LjQ1MTk4LC04MC4wODExNyxKUyxKVixBQSwsLCJDdWx0aXZvIGRlIHJlZm9yZXN0YWNp824sIGRlIGFwcm94aW1hZGFtZW50ZSAxNSBh8W9zLiINCkFaMDUyLEFaR0VOMDUyLDIwMjQwOTI0LFBhbmFtYWVzLE5vcnRoLDcuNDU0NjEsLTgwLjA4MDc4LEpTLEpWLEFBLCwsIkJvc3F1ZSBzZWN1bmRhcmlvIGNvbiDhcmJvbGVzIGRlIHJlZm9yZXN0YWNp824sIG11Y2hhcyBsaWFuYXMsIHRyYW5zZWN0byBlbiBwZW5kaWVudGUuIg0KQVowNTMsQVpHRU4wNTMsMjAyNDA5MjMsUGFuYW1hZXMsU291dGgsNy40MjEyNSwtODAuMDg3MzEsSlMsSlYsQUEsLCwiQm9zcXVlIHNlY3VuZGFyaW8gY29uIOFyYm9sZXMgZGUgMjAtMzAgbWV0cm9zIGRlIGFsdHVyYSwgYWJ1bmRhbmNpYSBkZWwgaGVsZWNobyBBZGlhbnR1bSBzcC4iDQo=" download="ETH tree metadata AZ001-053.csv">Download ETH tree metadata AZ001-053.csv</a>
 </div>
+<h1 id="section"></h1>
 <p>Setting up the environment and initial cleanup:</p>
 <details>
 <summary>
@@ -2325,7 +2282,7 @@ Mammals
 <span><span class='va'>data2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>stem</span> <span class='op'>==</span> <span class='st'>"1"</span>,<span class='op'>)</span></span>
 <span></span>
 <span><span class='co'># Simplify dataframe</span></span>
-<span><span class='va'>data2</span> <span class='op'>&lt;-</span> <span class='va'>data2</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>]</span>  <span class='co'># columns: point, name, count</span></span>
+<span><span class='va'>data2</span> <span class='op'>&lt;-</span> <span class='va'>data2</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>]</span>  <span class='co'># columns: point, name</span></span>
 <span></span>
 <span><span class='co'># Count unique tree observations</span></span>
 <span><span class='va'>data_counted</span> <span class='op'>&lt;-</span> <span class='va'>data2</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
@@ -2356,7 +2313,7 @@ Mammals
 <span><span class='co'>#making dataframe of just counts:</span></span>
 <span><span class='va'>data_counts</span> <span class='op'>&lt;-</span> <span class='va'>data_wide</span><span class='op'>[</span>,<span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>]</span></span>
 <span></span>
-<span><span class='va'>tree_abundance</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>rowSums</a></span><span class='op'>(</span><span class='va'>data_counts</span><span class='op'>)</span>              <span class='co'>#total abundance</span></span>
+<span><span class='va'>tree_abundance</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>rowSums</a></span><span class='op'>(</span><span class='va'>data_counts</span><span class='op'>)</span>              <span class='co'>#total abundance - a bit of redundancy built in as I already calculated this. Good to see the values match up</span></span>
 <span><span class='va'>tree_richness</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/vegan/man/diversity.html'>specnumber</a></span><span class='op'>(</span><span class='va'>data_counts</span><span class='op'>)</span>            <span class='co'>#species richness </span></span>
 <span><span class='va'>tree_shannon</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/pkg/vegan/man/diversity.html'>diversity</a></span><span class='op'>(</span><span class='va'>data_counts</span><span class='op'>)</span>                <span class='co'>#Shannon diversity index</span></span>
 <span><span class='va'>tree_simpson</span><span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/vegan/man/diversity.html'>diversity</a></span><span class='op'>(</span><span class='va'>data_counts</span>, <span class='st'>"simpson"</span><span class='op'>)</span>    <span class='co'>#Simpson diversity index</span></span></code></pre>
@@ -2408,6 +2365,113 @@ Mammals
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>MBA_SD</span> <span class='op'>&lt;-</span> <span class='va'>mean_basal_area</span><span class='op'>$</span><span class='va'>mean_basal_area</span><span class='op'>/</span><span class='va'>stem_density</span><span class='op'>$</span><span class='va'>stem_density</span></span></code></pre>
 </div>
+</div>
+<h3 id="combining-with-land-use-data">Combining with land use data</h3>
+<details>
+<summary>
+<strong>Click here</strong> for code
+</summary>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>#####</span></span>
+<span><span class='co'>#remove rows for which we have no data - need the chase up why</span></span>
+<span><span class='va'>tree_data</span> <span class='op'>&lt;-</span> <span class='va'>metadata</span><span class='op'>[</span><span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>28</span>, <span class='fl'>29</span>, <span class='fl'>33</span><span class='op'>)</span>,<span class='op'>]</span></span>
+<span></span>
+<span><span class='co'>#remove columns we don't care about right now</span></span>
+<span><span class='va'>tree_data</span> <span class='op'>&lt;-</span> <span class='va'>tree_data</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>7</span><span class='op'>)</span><span class='op'>]</span>   <span class='co'>#point, land use</span></span>
+<span></span>
+<span><span class='co'># adding the various calculated indicators</span></span>
+<span><span class='va'>tree_data</span><span class='op'>$</span><span class='va'>stem_density</span> <span class='op'>&lt;-</span> <span class='va'>stem_density</span><span class='op'>$</span><span class='va'>stem_density</span></span>
+<span><span class='va'>tree_data</span><span class='op'>$</span><span class='va'>mean_basal_area</span> <span class='op'>&lt;-</span> <span class='va'>mean_basal_area</span><span class='op'>$</span><span class='va'>mean_basal_area</span></span>
+<span><span class='va'>tree_data</span><span class='op'>$</span><span class='va'>MBA_SD</span> <span class='op'>&lt;-</span> <span class='va'>MBA_SD</span></span>
+<span><span class='va'>tree_data</span><span class='op'>$</span><span class='va'>quadratic_mean_diameter</span> <span class='op'>&lt;-</span> <span class='va'>quadratic_mean_diameter</span><span class='op'>$</span><span class='va'>quadratic_mean_diameter</span></span>
+<span><span class='va'>tree_data</span><span class='op'>$</span><span class='va'>tree_abundance</span> <span class='op'>&lt;-</span> <span class='va'>tree_abundance</span></span>
+<span><span class='va'>tree_data</span><span class='op'>$</span><span class='va'>tree_richness</span> <span class='op'>&lt;-</span> <span class='va'>tree_richness</span></span>
+<span><span class='va'>tree_data</span><span class='op'>$</span><span class='va'>tree_shannon</span> <span class='op'>&lt;-</span> <span class='va'>tree_shannon</span></span>
+<span><span class='va'>tree_data</span><span class='op'>$</span><span class='va'>tree_simpson</span> <span class='op'>&lt;-</span> <span class='va'>tree_simpson</span></span>
+<span></span>
+<span></span>
+<span><span class='co'>##### patterns by land use</span></span>
+<span><span class='va'>selected_land_uses</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"pasture"</span>,</span>
+<span>                        <span class='st'>"nat_regen"</span>,</span>
+<span>                        <span class='st'>"mature"</span>,</span>
+<span>                       <span class='st'>"reforestation"</span>, </span>
+<span>                       <span class='st'>"teak"</span></span>
+<span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Filter dataset and calculate means per land use</span></span>
+<span><span class='va'>tree_summary</span> <span class='op'>&lt;-</span> <span class='va'>tree_data</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>land_use</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='va'>selected_land_uses</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>land_use</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span><span class='op'>(</span></span>
+<span>    tree_mean_stem_density <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>stem_density</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    tree_mean_basal_area <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>mean_basal_area</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    tree_mean_MBA_SD <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>MBA_SD</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    tree_mean_quadratic_mean_diameter <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>quadratic_mean_diameter</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    tree_mean_abundance <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>tree_abundance</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    tree_mean_richness <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>tree_richness</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    tree_mean_shannon <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>tree_shannon</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    tree_mean_simpson <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>tree_simpson</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span>  <span class='op'>)</span></span>
+<span></span>
+<span></span>
+<span><span class='co'>############# calculating standard deviation for error bars</span></span>
+<span><span class='va'>tree_summary</span> <span class='op'>&lt;-</span> <span class='va'>tree_data</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>land_use</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='va'>selected_land_uses</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>land_use</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span><span class='op'>(</span></span>
+<span>    mean_stem_density <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>stem_density</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    sd_stem_density <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>stem_density</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    </span>
+<span>    mean_mean_basal_area <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>mean_basal_area</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    sd_basal_area <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>mean_basal_area</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    </span>
+<span>    mean_MBA_SD <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>MBA_SD</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    sd_MBA_SD <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>MBA_SD</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    </span>
+<span>    mean_quadratic_mean_diameter <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>quadratic_mean_diameter</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    sd_quadratic_mean_diameter <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>quadratic_mean_diameter</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    </span>
+<span>    mean_abundance <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>tree_abundance</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    sd_abundance <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>tree_abundance</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    </span>
+<span>    mean_richness <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>tree_richness</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    sd_richness <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>tree_richness</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    </span>
+<span>    mean_shannon <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>tree_shannon</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    sd_shannon <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>tree_shannon</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    </span>
+<span>    mean_simpson <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>tree_simpson</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>    sd_simpson <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>tree_simpson</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span>  <span class='op'>)</span></span></code></pre>
+</div>
+</div>
+</details>
+<h3 id="visualization">Visualization</h3>
+<p>Now for some simple plots to look at the relationship between these various composition and structural indicators and land use.</p>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="Trees_files/figure-html5/unnamed-chunk-11-1.png" width="624" /></p>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="Trees_files/figure-html5/unnamed-chunk-12-1.png" width="624" /></p>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="Trees_files/figure-html5/unnamed-chunk-13-1.png" width="624" /></p>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="Trees_files/figure-html5/unnamed-chunk-14-1.png" width="624" /></p>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="Trees_files/figure-html5/unnamed-chunk-15-1.png" width="624" /></p>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="Trees_files/figure-html5/unnamed-chunk-16-1.png" width="624" /></p>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="Trees_files/figure-html5/unnamed-chunk-17-1.png" width="624" /></p>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="Trees_files/figure-html5/unnamed-chunk-18-1.png" width="624" /></p>
 </div>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->

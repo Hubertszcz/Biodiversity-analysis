@@ -80,7 +80,7 @@ I want to get several values from this analysis for each sampling point, namely 
 data2 <- subset(data, stem == "1",)
 
 # Simplify dataframe
-data2 <- data2[c(1, 10)]  # columns: point, name, count
+data2 <- data2[c(1, 10)]  # columns: point, name
 
 # Count unique tree observations
 data_counted <- data2 %>%
@@ -112,7 +112,7 @@ data_wide[is.na(data_wide)] <- 0
 #making dataframe of just counts:
 data_counts <- data_wide[,-c(1)]
 
-tree_abundance <- rowSums(data_counts)              #total abundance
+tree_abundance <- rowSums(data_counts)              #total abundance - a bit of redundancy built in as I already calculated this. Good to see the values match up
 tree_richness <- specnumber(data_counts)            #species richness 
 tree_shannon<-diversity(data_counts)                #Shannon diversity index
 tree_simpson<- diversity(data_counts, "simpson")    #Simpson diversity index
@@ -168,4 +168,192 @@ At one point we discussed this as a structural indicator that would change predi
 
 ```{r, results = 'hide'}
 MBA_SD <- mean_basal_area$mean_basal_area/stem_density$stem_density
+```
+
+### Combining with land use data
+
+
+<details markdown="1">
+<summary><strong>Click here</strong> for code </summary>
+```{r, message=FALSE, results = 'hide'}
+#####
+#remove rows for which we have no data - need the chase up why
+tree_data <- metadata[-c(28, 29, 33),]
+
+#remove columns we don't care about right now
+tree_data <- tree_data[c(1,7)]   #point, land use
+
+# adding the various calculated indicators
+tree_data$stem_density <- stem_density$stem_density
+tree_data$mean_basal_area <- mean_basal_area$mean_basal_area
+tree_data$MBA_SD <- MBA_SD
+tree_data$quadratic_mean_diameter <- quadratic_mean_diameter$quadratic_mean_diameter
+tree_data$tree_abundance <- tree_abundance
+tree_data$tree_richness <- tree_richness
+tree_data$tree_shannon <- tree_shannon
+tree_data$tree_simpson <- tree_simpson
+
+
+##### patterns by land use
+selected_land_uses <- c("pasture",
+                        "nat_regen",
+                        "mature",
+                       "reforestation", 
+                       "teak"
+)
+
+# Filter dataset and calculate means per land use
+tree_summary <- tree_data %>%
+  filter(land_use %in% selected_land_uses) %>%
+  group_by(land_use) %>%
+  summarise(
+    tree_mean_stem_density = mean(stem_density, na.rm = TRUE),
+    tree_mean_basal_area = mean(mean_basal_area, na.rm = TRUE),
+    tree_mean_MBA_SD = mean(MBA_SD, na.rm = TRUE),
+    tree_mean_quadratic_mean_diameter = mean(quadratic_mean_diameter, na.rm = TRUE),
+    tree_mean_abundance = mean(tree_abundance, na.rm = TRUE),
+    tree_mean_richness = mean(tree_richness, na.rm = TRUE),
+    tree_mean_shannon = mean(tree_shannon, na.rm = TRUE),
+    tree_mean_simpson = mean(tree_simpson, na.rm = TRUE)
+  )
+
+
+############# calculating standard deviation for error bars
+tree_summary <- tree_data %>%
+  filter(land_use %in% selected_land_uses) %>%
+  group_by(land_use) %>%
+  summarise(
+    mean_stem_density = mean(stem_density, na.rm = TRUE),
+    sd_stem_density = sd(stem_density, na.rm = TRUE),
+    
+    mean_mean_basal_area = mean(mean_basal_area, na.rm = TRUE),
+    sd_basal_area = sd(mean_basal_area, na.rm = TRUE),
+    
+    mean_MBA_SD = mean(MBA_SD, na.rm = TRUE),
+    sd_MBA_SD = sd(MBA_SD, na.rm = TRUE),
+    
+    mean_quadratic_mean_diameter = mean(quadratic_mean_diameter, na.rm = TRUE),
+    sd_quadratic_mean_diameter = sd(quadratic_mean_diameter, na.rm = TRUE),
+    
+    mean_abundance = mean(tree_abundance, na.rm = TRUE),
+    sd_abundance = sd(tree_abundance, na.rm = TRUE),
+    
+    mean_richness = mean(tree_richness, na.rm = TRUE),
+    sd_richness = sd(tree_richness, na.rm = TRUE),
+    
+    mean_shannon = mean(tree_shannon, na.rm = TRUE),
+    sd_shannon = sd(tree_shannon, na.rm = TRUE),
+    
+    mean_simpson = mean(tree_simpson, na.rm = TRUE),
+    sd_simpson = sd(tree_simpson, na.rm = TRUE)
+  )
+```
+</details>
+
+### Visualization
+
+Now for some simple plots to look at the relationship between these various composition and structural indicators and land use.
+
+
+```{r echo=FALSE}
+ggplot(tree_summary, aes(x=land_use, y=mean_abundance, fill = land_use)) + 
+  geom_col(stat = "identity") + ggtitle("Tree mean abundance") +
+  geom_errorbar(aes(ymin = mean_abundance - sd_abundance,
+                    ymax = mean_abundance + sd_abundance),
+                width = 0.1, linewidth = 1) +
+  scale_fill_viridis_d() + theme_minimal() +
+  labs(x = "Land Use", y = "tree mean abundance") +
+  theme(legend.position="none")
+```
+
+
+
+```{r echo=FALSE}
+ggplot(tree_summary, aes(x=land_use, y=mean_richness, fill = land_use)) + 
+  geom_col(stat = "identity") + ggtitle("Tree mean richness") +
+  geom_errorbar(aes(ymin = mean_richness - sd_richness,
+                    ymax = mean_richness + sd_richness),
+                width = 0.1, linewidth = 1) +
+  scale_fill_viridis_d() + theme_minimal() +
+  labs(x = "Land Use", y = "tree mean richness") +
+  theme(legend.position="none")
+```
+
+
+
+```{r echo=FALSE}
+ggplot(tree_summary, aes(x=land_use, y=mean_shannon, fill = land_use)) + 
+  geom_col(stat = "identity") + ggtitle("Tree mean Shannon diversity") +
+  geom_errorbar(aes(ymin = mean_shannon - sd_shannon,
+                    ymax = mean_shannon + sd_shannon),
+                width = 0.1, linewidth = 1) +
+  scale_fill_viridis_d() + theme_minimal() +
+  labs(x = "Land Use", y = "tree mean Shannon diversity") +
+  theme(legend.position="none")
+
+```
+
+
+```{r echo=FALSE}
+ggplot(tree_summary, aes(x=land_use, y=mean_simpson, fill = land_use)) + 
+  geom_col(stat = "identity") + ggtitle("Tree mean Simpson diversity") +
+  geom_errorbar(aes(ymin = mean_simpson - sd_simpson,
+                    ymax = mean_simpson + sd_simpson),
+                width = 0.1, linewidth = 1) +
+  scale_fill_viridis_d() + theme_minimal() +
+  labs(x = "Land Use", y = "tree mean Simpson diversity") +
+  theme(legend.position="none")
+```
+
+
+
+```{r echo=FALSE}
+ggplot(tree_summary, aes(x=land_use, y=mean_stem_density, fill = land_use)) + 
+  geom_col(stat = "identity") + ggtitle("Tree mean stem density") +
+  geom_errorbar(aes(ymin = mean_stem_density - sd_stem_density,
+                    ymax = mean_stem_density + sd_stem_density),
+                width = 0.1, linewidth = 1) +
+  scale_fill_viridis_d() + theme_minimal() +
+  labs(x = "Land Use", y = "tree mean stem density (stems/ha)") +
+  theme(legend.position="none")
+```
+
+
+
+```{r echo=FALSE}
+ggplot(tree_summary, aes(x=land_use, y=mean_mean_basal_area, fill = land_use)) + 
+  geom_col(stat = "identity") + ggtitle("Tree mean basal area") +
+  geom_errorbar(aes(ymin = mean_mean_basal_area - sd_basal_area,
+                    ymax = mean_mean_basal_area + sd_basal_area),
+                width = 0.1, linewidth = 1) +
+  scale_fill_viridis_d() + theme_minimal() +
+  labs(x = "Land Use", y = "tree mean basal area (sq m/ha)") +
+  theme(legend.position="none")
+```
+
+
+
+```{r echo=FALSE}
+ggplot(tree_summary, aes(x=land_use, y=mean_quadratic_mean_diameter, fill = land_use)) + 
+  geom_col(stat = "identity") + ggtitle("Tree mean quadratic mean diameter") +
+  geom_errorbar(aes(ymin = mean_quadratic_mean_diameter - sd_quadratic_mean_diameter,
+                    ymax = mean_quadratic_mean_diameter + sd_quadratic_mean_diameter),
+                width = 0.1, linewidth = 1) +
+  scale_fill_viridis_d() + theme_minimal() +
+  labs(x = "Land Use", y = "tree mean quadratic mean diameter (cm)") +
+  theme(legend.position="none")
+
+```
+
+
+
+```{r echo=FALSE}
+ggplot(tree_summary, aes(x=land_use, y=mean_MBA_SD, fill = land_use)) + 
+  geom_col(stat = "identity") + ggtitle("Tree mean MBA : SD") +
+  geom_errorbar(aes(ymin = mean_MBA_SD - sd_MBA_SD,
+                    ymax = mean_MBA_SD + sd_MBA_SD),
+                width = 0.1, linewidth = 1) +
+  scale_fill_viridis_d() + theme_minimal() +
+  labs(x = "Land Use", y = "tree mean MBA : SD") +
+  theme(legend.position="none")
 ```
