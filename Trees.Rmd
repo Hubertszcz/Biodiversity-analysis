@@ -1,0 +1,179 @@
+---
+title: "Trees"
+description: |
+  Gentry transects for tree richness
+output:
+    distill::distill_article:
+      toc: true
+      toc_depth: 3
+---
+
+It's hard to imagine conducting a monitoring campaign to assess the success of reforestation without considering the trees. Because the focus is richness and diversity, as opposed to basal area or carbon sequestration, I opted for the method developed by Alwyn Gentry: 50 meter long transects, 2 meters wide, where every woody stem of 2.5cm DBH and greater is measured and identified. Each of my sampling points has data from a Gentry transect that starts at the monument pin.
+
+
+### Data cleanup 
+
+Three CSV files are needed for the initial data cleanup and analysis:
+
+```{r echo=FALSE}
+#xfun::embed_file('media/data/ETH dry season deployments AZ001-053.csv')
+```  
+
+
+```{r echo=FALSE}
+#xfun::embed_file('media/data/ETH tree data AZ001-053.csv')
+```  
+
+```{r echo=FALSE}
+#xfun::embed_file('media/data/ETH tree metadata AZ001-053.csv')
+```  
+
+Setting up the environment and initial cleanup:
+
+<details markdown="1">
+<summary><strong>Click here</strong> for code </summary>
+```{r setup, message=FALSE, results = 'hide'}
+#Load libraries
+library(ggplot2)
+library(vegan)
+library(viridis) 
+library(dplyr)
+library(tidyr)
+
+#Load the datasets
+metadata <- read.csv("media/data/ETH dry season deployments AZ001-053.csv")
+data <- read.csv("media/data/ETH tree data AZ001-053.csv")
+gentry_metadata <- read.csv("media/data/ETH tree metadata AZ001-053.csv")
+
+#data cleanup
+
+#remove rows/columns not in analysis [for sample dataset thid does nothing, but I have it baked into the cleanup documentation]
+metadata <- metadata[c(1:53),]                 ### which points are we analyzing?
+gentry_metadata <- gentry_metadata[c(1:53),]   ### which points are we analyzing?
+data <- data[c(1:11)]                           ### extra blank columns
+data<-data[which(complete.cases(data$meter)),]  ### extra blank rows
+data <- data[c(1:1752),]                           ### which points are we analyzing
+
+
+#remove blank rows (if the number of rows changes in data, then there are blanks, look into why)
+#[again, nothing happens in sample data set, but a good validation step]
+data[data == ""] <- NA  #replace blank with NA
+data <- data[complete.cases(data$name), ]
+
+
+#I need to include a step in cleanup to filter out lianas, which are currently included with trees if they have woody stems.
+#this starts with compiling a species list of lianas and matching it against my tree species list
+```
+
+
+I want to get several values from this analysis for each sampling point, namely tree abundance, species richness, and diversity indices (Shannon, Simpson, etc.). Acknowledging that these long and skinny plots are not the best method of measuring these structural indicators, I will also pull out data on stem density, basal area, and quadratic mean diameter. A mix of compositional and structural indicators is required for biodiversity crediting systems like Verra's SD VISta methodology. 
+
+### Composition indicators
+
+#### Abundance (individuals, not stems)
+
+<details markdown="1">
+<summary><strong>Click here</strong> for code </summary>
+```{r, message=FALSE, results = 'hide'}
+#removing extra stems (so one per individual)
+data2 <- subset(data, stem == "1",)
+
+# Simplify dataframe
+data2 <- data2[c(1, 10)]  # columns: point, name, count
+
+# Count unique tree observations
+data_counted <- data2 %>%
+  count(point, name)
+
+# Summarize total tree abundance per point
+total_tree_abundance <- data_counted %>%
+  group_by(point) %>%
+  summarise(total_abundance = sum(n)) %>%
+  arrange(point)
+```
+
+#Richness and diversity indicators
+
+The vegan package in R makes it easy to calculate all of these at once:
+
+<details markdown="1">
+<summary><strong>Click here</strong> for code </summary>
+```{r, message=FALSE, results = 'hide'}
+#calculating frequency
+data3 <- data2 %>%
+  group_by(point, name) %>%
+  summarise(freq = n(), .groups = "drop")
+
+#make point data wide for vegan package
+data_wide <- data3 %>% spread(key=name, value=freq)
+
+#replace NA values with 0:
+data_wide[is.na(data_wide)] <- 0
+
+#making dataframe of just counts:
+data_counts <- data_wide[,-c(1)]
+
+tree_abundance <- rowSums(data_counts)              #total abundance
+tree_richness <- specnumber(data_counts)            #species richness 
+tree_shannon<-diversity(data_counts)                #Shannon diversity index
+tree_simpson<- diversity(data_counts, "simpson")    #Simpson diversity index
+```
+
+
+### Structure indicators
+
+#### stem density
+
+<details markdown="1">
+<summary><strong>Click here</strong> for code </summary>
+```{r, message=FALSE, results = 'hide'}
+data$newCol <- 1
+
+stem_density <- data %>%
+  group_by(point) %>%
+  summarise(stem_density = sum(newCol, na.rm = TRUE)) %>%
+  arrange(point)
+                                                      
+#Converting to trees per hectare
+stem_density$stem_density <- stem_density$stem_density*100     #treating the 2x50m Gentry transects as 100sqm plots
+```
+
+#### mean basal area
+
+<details markdown="1">
+<summary><strong>Click here</strong> for code </summary>
+```{r, message=FALSE, results = 'hide'}
+data$area <- (pi*((data$dbh)/2)**2)/10000   #calculate area from diameter, then convert from sq cm to sq meters
+
+#mean basal area per transect
+mean_basal_area <- data %>%
+  group_by(point) %>%
+  summarise(mean_basal_area = sum(area, na.rm = TRUE)) %>%
+  arrange(point)
+
+#mean basal area per hectare
+mean_basal_area$mean_basal_area <- mean_basal_area$mean_basal_area*100     #treating the 2x50m Gentry transects as 100sqm plots
+```
+
+
+#### quadratic mean diameter
+
+<details markdown="1">
+<summary><strong>Click here</strong> for code </summary>
+```{r, message=FALSE, results = 'hide'}
+quadratic_mean_diameter <- data %>%
+  group_by(point) %>%
+  summarise(
+    quadratic_mean_diameter = sqrt(mean(dbh^2, na.rm = TRUE))  # QMD in cm
+  )
+```
+
+#### mean basal area : stem density
+
+At one point we discussed this as a structural indicator that would change predicatbly after reforestation. Stem density alone is likely to initially increase as shrubby and early successional species take over ex-pastureland, then decrease as the forest ages.
+
+<details markdown="1">
+<summary><strong>Click here</strong> for code </summary>
+```{r, message=FALSE, results = 'hide'}
+MBA_SD <- mean_basal_area$mean_basal_area/stem_density$stem_density
+```

@@ -24,8 +24,8 @@ navbar:
           href: MothBox.html
     - text: "Plants"
       menu:
-        - text: "Gentry Transects"
-          href: Gentry_Transects.html
+        - text: "Trees"
+          href: Trees.html
         - text: "Invasive Plants"
           href: Invasive_Plants.html
         - text: "Deadwood"
