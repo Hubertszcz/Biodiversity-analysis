@@ -45,26 +45,32 @@ Brief summary of what I will be doing with my soil invert data:
 
 ### Data cleanup 
 
-Here is a .csv file with raw data for the invert pilot study:
+Three CSV files are needed for the initial data cleanup and analysis:
 
-#```{r echo=FALSE}
-#xfun::embed_file('docs/data/soil invert data.csv')
-#```  
+```{r echo=FALSE}
+xfun::embed_file('media/data/ETH dry season deployments AZ001-053.csv')
+```  
 
 
+```{r echo=FALSE}
+xfun::embed_file('media/data/ETH dry season soil inverts AZ001-053.csv')
+```  
 
-This spreadsheet is a combination of the invertebrate abundance data and the collection/extraction metadata, in long format. I will start with some clean up and organization. This involves making sure that R reads my dates as dates, converting my data to long format, splitting the dataset in two (one with unknowns and one without), correcting abundance data for sample mass, and splitting the data into absolute and relative abundance. I use absolute abundance data for calculating diversity indices and relative abundance for community structure modelling. 
+```{r echo=FALSE}
+xfun::embed_file('media/data/ETH dry season soil metadata AZ001-053.csv')
+```  
+
+#
+
+I will start with some clean up and organization. This involves making sure that R reads my dates as dates, converting my data to long format, splitting the dataset in two (one with unknowns and one without), correcting abundance data for sample mass, and splitting the data into absolute and relative abundance. I use absolute abundance data for calculating diversity indices and relative abundance for community structure modelling. Along the way I'll calculate richness, evenness, total abundance, and several diversity indices using the ['vegan'](https://cran.r-project.org/web/packages/vegan/index.html) R package. I use absolute abundance to calculate these metrics.
+
+A note: I suspect that soil moisture and temperature mediate the effect of land use on soil invertebrates. Mature forests with a full canopy are likely to have more stable temperatures, lower daytime temperatures, and higher soil moisture than young forests or pastureland. Furthermore,the taxa that I found to be most sensitive to temperature during my research on BCI were most sensitive to land use in Azuero during my pilot study. Unfortunately, I don't have temperature data and only have poor quality moisture data for this sample dataset - got better data collection later on though, so could explore this relationship more with the full dataset.
+
 
 <details markdown="1">
 <summary><strong>Click here</strong> for code </summary>
-
-#```{r setup, message=FALSE, results = 'hide'}
-#setwd("C:/Users/Hubert/Desktop/Biodiversity Monitoring/Biodiversity data analysis/Biodiversity-analysis")
-
-data <- read.csv('docs/data/soil invert data.csv')
-
+```{r setup, message=FALSE, results = 'hide'}
 #load packages
-
 library(ggplot2)
 library(tidyr)
 library(dplyr)
@@ -72,287 +78,180 @@ library(gridExtra)
 library('funrar')
 library(lubridate)
 library(viridis)
+library(vegan)
+
+#load data
+#Load the datasets
+metadata <- read.csv("media/data/ETH dry season deployments AZ001-053.csv")
+data <- read.csv("media/data/ETH dry season soil inverts AZ001-053.csv")
+soil_metadata <- read.csv("media/data/ETH dry season soil metadata AZ001-053.csv")
 
 ## Initial cleanup, organization
 
 #make dates recognizable by R
-data$collect.date <- ymd(data$collect.date)
+soil_metadata$collect_date <- ymd(soil_metadata$collect_date)
+
+#remove rows not in analysis
+data <- data[c(1:53),]
+soil_metadata <- soil_metadata[c(1:53),]
+metadata <- metadata[c(1:53),]
 
 #Add 0 abundance for unobserved taxa
-data$count[is.na(data$count)] <- 0
+data[is.na(data)] <- 0
 
-#remove excess rows from dataframe
-data<-data[which(complete.cases(data$collect.date)),]
+
+#get rid of point names in data (that info will live in soil_metadata)
+data <- data[,-c(1:2)]
 
 #create dataset with unknowns (for total abundance)
-data.unknown<-data
+data_unknown <- data
 
 #create dataset without unknowns (for diversity and community composition)
-data <- subset(data, !taxon == "Unknown",)
+data <- data[,-c(1)]
+######################################################
 
-#make my data wide for vegan package
-wide.data <- data %>%
-  pivot_wider(names_from = taxon, values_from = count)
+#for some reason soil_metadata$dry_mass is character, not numeric, need to fix
+soil_metadata$dry_mass <- as.numeric(soil_metadata$dry_mass)
 
-#make same wide dataframe for data with unknowns
-wide.data.unknown <- data.unknown %>%
-  pivot_wider(names_from = taxon, values_from = count)
+#converting to count/1000g dry sample mass
+data <- (1000/soil_metadata$dry_mass)*data
+data_unknown <- (1000/soil_metadata$dry_mass)*data_unknown
 
-#Splitting data frame into count and environmental data
-wide.data2<-wide.data[,-c(1:12)]     
-wide.data3<-wide.data[,-c(13:66)]
-wide.data.unknown2<-wide.data.unknown[,-c(1:12)]
-wide.data.unknown3<-wide.data.unknown[,-c(13:67)]
+#Do I need to convert mass-corrected absolute abundance to relative abundance? Maybe for NMDS 
 
-# Converting to count per dry mass
+invert_richness <- specnumber(data)                  #Tallying number of taxa
+invert_shannon<-diversity(data)                  #Shannon diversity index
+invert_simpson<- diversity(data, "simpson")      #Simpson diversity index
+invert_J<-invert_shannon/log(invert_richness)                                    #Pielou's evenness
+invert_abundance<-rowSums(data_unknown)          #total absolute abundance per 1000g (including unknowns)
 
-#converting to count/1000g
-wide.data2 <- (1000/wide.data3$dry.mass)*wide.data2
-wide.data.unknown2 <- (1000/wide.data.unknown3$dry.mass)*wide.data.unknown2
+data_summary<-data.frame(metadata,invert_richness, invert_shannon, invert_simpson, invert_J, invert_abundance)
 
-#Next I convert mass-corrected absolute abundance to relative abundance, which is used later for total abundance, individual taxon abundance, and community structure modelling. 
-
-#Before the conversion I create data frames backing up the mass-corrected absolute count data for diversity index calculations. 
-
-#Creating versions of the count data that are corrected for mass, but not made relative (for diversity indexes)
-wide.data.absolute <- wide.data2
-wide.data.unknown.absolute <- wide.data.unknown2
-
-#reincorporating, and duplicating mass-corrected absolute count data (only doing it for unknowns because this data frame will be used for abundance)
-wide.data.unknown[,c(13:67)] <- wide.data.unknown.absolute
-wide.data.unknown.absolute2 <- wide.data.unknown
-
-#converting absolute to relative abundance
-wide.data2 <- as.matrix(wide.data2)
-wide.data.unknown2 <- as.matrix(wide.data.unknown2)
-wide.data2 <- make_relative(wide.data2)
-wide.data.unknown2 <- make_relative(wide.data.unknown2)
-wide.data2 <- as.data.frame(wide.data2)
-wide.data.unknown2 <- as.data.frame(wide.data.unknown2)
-
-#reincorporating mass-corrected relative count data into original data frame
-wide.data[,c(13:66)] <- wide.data2
-wide.data.unknown[,c(13:67)] <- wide.data.unknown2
-
-```
-
-</details>
-
-
-Next up I'll calculate richness, evenness, total abundance, and several diversity indices using the ['vegan'](https://cran.r-project.org/web/packages/vegan/index.html) R package. I use absolute abundance to calculate these metrics.
-
-
-<details markdown="1">
-<summary><strong>Click here</strong> for code </summary>
-#```{r, message=FALSE, results = 'hide'}
-library(vegan)
-
-taxa <- specnumber(wide.data.absolute)                  #Tallying number of taxa
-shannon<-diversity(wide.data.absolute)                  #Shannon diversity index
-simpson<- diversity(wide.data.absolute, "simpson")      #Simpson diversity index
-J<-shannon/log(taxa)                                    #Pielou's evenness
-abundance<-rowSums(wide.data.unknown.absolute)          #total absolute abundance per 1000g (including unknowns)
-
-data.summary<-data.frame(wide.data3,taxa, abundance, J, shannon, simpson)
-
-diversity.indices <- data.summary[,c(1:2,13:17)]
-
+invert_data <- data_summary[,c(1,7,22:26)]            #simplifying the data frame
 ```
 </details>
 
-Here's what that data looks like:
 
-#```{r, echo=FALSE}
-knitr::kable(diversity.indices[1:10, ], format = "markdown")
+Here's what the summarized data looks like:
+
+```{r, echo=FALSE}
+knitr::kable(invert_data[1:10, ], format = "markdown")
 
 ```
 
 Taxa is the number of unique taxa found in each sample (richness/alpha diversity), abundance is total (mass-corrected) abundance of soil fauna, J is Pielou's evenness (how evenly distributed abundance is between the taxa; species dominance rather than diversity), and Shannon and Simpson are two different diversity indices, ways of conceptualizing diversity that combine abundance and richness. The Simpson index is more heavily influenced by dominant species, while the Shannon index is more heavily influenced by rare species. Going forward I will use Shannon to represent diversity, but if we want we can easily swap in Simpson or something else. Note: sample 53 is anomalous. Never have I seen a mature forest sample with so few inverts. Maybe the reason will become apparent after soil chemistry analysis, or there was an error of some kind during extraction/sample processing.
 
-Let's summarize averages for each land use type:
 
-#```{r, echo=FALSE}
-subset.mature <- subset(data.summary, land.use == "mature")
-subset.nat.regen <- subset(data.summary, land.use == "nat.regen")
-subset.reforestation <- subset(data.summary, land.use == "reforestation")
-subset.teak <- subset(data.summary, land.use == "teak")
-subset.pasture <- subset(data.summary, land.use == "pasture")
+Next up, summarizing averages for each land use type:
 
+```{r, echo=FALSE}
+##### patterns by land use
+selected_land_uses <- c("pasture",
+                        "nat_regen",
+                        "mature",
+                        "reforestation", 
+                        "teak"
+)
 
-land.use <- c('mature', 'nat.regen', 'reforestation', 'teak', 'pasture')
-taxa <- c(mean(subset.mature$taxa),
-          mean(subset.nat.regen$taxa), 
-          mean(subset.reforestation$taxa),      
-          mean(subset.teak$taxa),
-          mean(subset.pasture$taxa))
-abundance <- c(mean(subset.mature$abundance),
-          mean(subset.nat.regen$abundance), 
-          mean(subset.reforestation$abundance),      
-          mean(subset.teak$abundance),
-          mean(subset.pasture$abundance))
-J <- c(mean(subset.mature$J),
-          mean(subset.nat.regen$J), 
-          mean(subset.reforestation$J),      
-          mean(subset.teak$J),
-          mean(subset.pasture$J))
-shannon <- c(mean(subset.mature$shannon),
-          mean(subset.nat.regen$shannon), 
-          mean(subset.reforestation$shannon),      
-          mean(subset.teak$shannon),
-          mean(subset.pasture$shannon))
-simpson <- c(mean(subset.mature$simpson),
-          mean(subset.nat.regen$simpson), 
-          mean(subset.reforestation$simpson),      
-          mean(subset.teak$simpson),
-          mean(subset.pasture$simpson))
+# Filter dataset and calculate means per land use
+#invert_summary <- invert_data %>%
+#  filter(land_use %in% selected_land_uses) %>%
+#  group_by(land_use) %>%
+#  summarise(
+#    invert_mean_abundance = mean(invert_abundance, na.rm = TRUE),
+#    invert_mean_richness = mean(invert_richness, na.rm = TRUE),
+#    invert_mean_shannon = mean(invert_shannon, na.rm = TRUE),
+#    invert_mean_simpson = mean(invert_simpson, na.rm = TRUE)
+#  )
 
-mean.values <- data.frame(land.use, taxa, abundance, J, shannon, simpson)
+###### # Filter dataset and calculate means per land use along with standard deviation for error bars
+invert_summary <- invert_data %>%
+  filter(land_use %in% selected_land_uses) %>%
+  group_by(land_use) %>%
+  summarise(
+    invert_mean_abundance = mean(invert_abundance, na.rm = TRUE),
+    sd_abundance = sd(invert_abundance, na.rm = TRUE),
+    
+    invert_mean_richness = mean(invert_richness, na.rm = TRUE),
+    sd_richness = sd(invert_richness, na.rm = TRUE),
+    
+    invert_mean_shannon = mean(invert_shannon, na.rm = TRUE),
+    sd_shannon = sd(invert_shannon, na.rm = TRUE),
+    
+    invert_mean_simpson = mean(invert_simpson, na.rm = TRUE),
+    sd_simpson = sd(invert_simpson, na.rm = TRUE)
+  )
 
-knitr::kable(mean.values, format = "markdown")
+knitr::kable(invert_summary, format = "markdown")
 ```
-Now let's visualize it.
 
 
-### Total abundance 
+### Visualization
 
-#```{r, echo=FALSE, message = FALSE, warning = FALSE}
 
 ##### Abundance
-ggplot(data=mean.values, aes(x=land.use, y=abundance, fill=land.use)) +
-  geom_bar(stat="identity", position=position_dodge(), aes(x = factor(land.use, level = land.use)), width = .5, show.legend = FALSE)+
-  #scale_fill_brewer(palette="Paired")+ 
-  labs(title="Total abundance of soil fauna", x="Land Use Type", y = "Mean abundance (count/1kg dry soil)")+
-  theme(text=element_text(family="Arial")) + 
-  scale_fill_viridis(discrete=TRUE, option="viridis", begin = .3,end = .75,)+
-  theme_minimal()+ theme(plot.title = element_text(hjust = 0.5))
+
+```{r echo=FALSE}
+ggplot(invert_summary, aes(x=land_use, y=invert_mean_abundance, fill = land_use)) + 
+  geom_col(stat = "identity") + ggtitle("Total abundance of soil fauna") +
+  geom_errorbar(aes(ymin = invert_mean_abundance - sd_abundance,
+                    ymax = invert_mean_abundance + sd_abundance),
+                width = 0.1, linewidth = 1) +
+  scale_fill_viridis_d() + theme_minimal() +
+  labs(x = "Land Use", y = "Mean abundance (count/1kg dry soil)") +
+  theme(legend.position="none")
 ```
 
-Abundance data is corrected for mass to give values of density per 1000g dry soil. The soil moisture values are based on air-dried samples and mass was recorded with a kitchen scale (low resolution), so moisture is a potential source of error here.
-
-Moisture has a large influence on mass, and can vary considerably (30-50% in the wet season in my experience), so this is a considerable source of error.
+Abundance data is corrected for mass to give values of density per 1000g dry soil. The soil moisture values for the sample data set are based on air-dried samples and mass was recorded with a kitchen scale (low resolution), so moisture is a potential source of error here. Moisture has a large influence on mass, and can vary considerably (30-50% in the wet season in my experience), so this is a considerable source of error.Most of the other soil data have moisture collected with a probe, which should be more accurate.
 
 
-### Taxonomic Richness
-
-#```{r, echo=FALSE, message = FALSE, warning = FALSE}
-
-##### Richness
-ggplot(data=mean.values, aes(x=land.use, y=taxa, fill=land.use)) +
-  geom_bar(stat="identity", position=position_dodge(), aes(x = factor(land.use, level = land.use)), width = .5, show.legend = FALSE)+
-  #scale_fill_brewer(palette="Paired")+ 
-  labs(title="Taxonomic richness of soil fauna", x="Land Use Type", y = "Ordinal taxonomic richness")+
-  theme(text=element_text(family="Arial")) + 
-  scale_fill_viridis(discrete=TRUE, option="viridis", begin = .3,end = .75,)+
-  theme_minimal()+ theme(plot.title = element_text(hjust = 0.5))
+```{r echo=FALSE}
+ggplot(invert_summary, aes(x=land_use, y=invert_mean_richness, fill = land_use)) + 
+  geom_col(stat = "identity") + ggtitle("Soil invertebrate richness") +
+  geom_errorbar(aes(ymin = invert_mean_richness - sd_richness,
+                    ymax = invert_mean_richness + sd_richness),
+                width = 0.1, linewidth = 1) +
+  scale_fill_viridis_d() + theme_minimal() +
+  labs(x = "Land Use", y = "Ordinal taxonomic richness") +
+  theme(legend.position="none")
 ```
 
 
 The low richness in teak is perhaps related to nutrient leaching and soil erosion ([Fernández-Moya et al 2014](https://www.sciencedirect.com/science/article/abs/pii/S0341816214002379), [Amponsah & Meyer 2008](https://www.tandfonline.com/doi/abs/10.1080/00103620009370442), [Boley et al 2009](https://www.sciencedirect.com/science/article/abs/pii/S0378112709001534)). Assessing biodiversity via richness has the caveat that rare species weigh pretty heavily on the metric. If a community has 100 individuals of one taxon but only one individual each for a further 9, then it will have a higher richness than a community composed of 8 taxa with 1 individuals each (a more diverse scenario).
 
-### Shannon Diversity
 
 
-#```{r, echo=FALSE, message = FALSE, warning = FALSE}
+```{r echo=FALSE}
+ggplot(invert_summary, aes(x=land_use, y=invert_mean_shannon, fill = land_use)) + 
+  geom_col(stat = "identity") + ggtitle("Soil Invertebrate Shannon diversity") +
+  geom_errorbar(aes(ymin = invert_mean_shannon - sd_shannon,
+                    ymax = invert_mean_shannon + sd_shannon),
+                width = 0.1, linewidth = 1) +
+  scale_fill_viridis_d() + theme_minimal() +
+  labs(x = "Land Use", y = "Invert mean Shannon diversity") +
+  theme(legend.position="none")
 
-##### Shannon diversity
-ggplot(data=mean.values, aes(x=land.use, y=shannon, fill=land.use)) +
-  geom_bar(stat="identity", position=position_dodge(), aes(x = factor(land.use, level = land.use)), width = .5, show.legend = FALSE)+
-  #scale_fill_brewer(palette="Paired")+ 
-  labs(title="Shannon diversity of soil fauna", x="Land Use Type", y = "Shannon index")+
-  theme(text=element_text(family="Arial")) + 
-  scale_fill_viridis(discrete=TRUE, option="viridis", begin = .3,end = .75,)+
-  theme_minimal()+ theme(plot.title = element_text(hjust = 0.5))
 ```
 
-### Everything again excluding AZSOIL053
+Weird!! Not what I encountered in my pilot study. Wonder how this will look with the whole dataset.
 
-These results are somewhat surprising - Mature forest had the greatest abundance and richness in my pilot study. As of 1.7.24 these results are based only on 25 sampling points, once I get the data for the remainder the story will be more complete. I also wonder if sample 53 is single-handedly skewing these results right now?
-
-Let's redo everything excluding sample 53:
-
-#```{r, echo=FALSE, message = FALSE, warning = FALSE}
-subset.mature53 <- subset.mature[-c(1), ] 
-
-taxa53 <- c(mean(subset.mature53$taxa),
-          mean(subset.nat.regen$taxa), 
-          mean(subset.reforestation$taxa),      
-          mean(subset.teak$taxa),
-          mean(subset.pasture$taxa))
-abundance53 <- c(mean(subset.mature53$abundance),
-          mean(subset.nat.regen$abundance), 
-          mean(subset.reforestation$abundance),      
-          mean(subset.teak$abundance),
-          mean(subset.pasture$abundance))
-J53 <- c(mean(subset.mature53$J),
-          mean(subset.nat.regen$J), 
-          mean(subset.reforestation$J),      
-          mean(subset.teak$J),
-          mean(subset.pasture$J))
-shannon53 <- c(mean(subset.mature53$shannon),
-          mean(subset.nat.regen$shannon), 
-          mean(subset.reforestation$shannon),      
-          mean(subset.teak$shannon),
-          mean(subset.pasture$shannon))
-simpson53 <- c(mean(subset.mature53$simpson),
-          mean(subset.nat.regen$simpson), 
-          mean(subset.reforestation$simpson),      
-          mean(subset.teak$simpson),
-          mean(subset.pasture$simpson))
-
-mean.values53 <- data.frame(land.use, taxa53, abundance53, J53, shannon53, simpson53)
-
-##### Abundance
-ggplot(data=mean.values53, aes(x=land.use, y=abundance53, fill=land.use)) +
-  geom_bar(stat="identity", position=position_dodge(), aes(x = factor(land.use, level = land.use)), width = .5, show.legend = FALSE)+
-  #scale_fill_brewer(palette="Paired")+ 
-  labs(title="Total abundance of soil fauna", x="Land Use Type", y = "Mean abundance (count/1kg dry soil)")+
-  theme(text=element_text(family="Arial")) + 
-  scale_fill_viridis(discrete=TRUE, option="viridis", begin = .3,end = .75,)+
-  theme_minimal()+ theme(plot.title = element_text(hjust = 0.5))
-
-ggplot(data=mean.values53, aes(x=land.use, y=taxa53, fill=land.use)) +
-  geom_bar(stat="identity", position=position_dodge(), aes(x = factor(land.use, level = land.use)), width = .5, show.legend = FALSE)+
-  #scale_fill_brewer(palette="Paired")+ 
-  labs(title="Taxonomic richness of soil fauna", x="Land Use Type", y = "Ordinal taxonomic richness")+
-  theme(text=element_text(family="Arial")) + 
-  scale_fill_viridis(discrete=TRUE, option="viridis", begin = .3,end = .75,)+
-  theme_minimal()+ theme(plot.title = element_text(hjust = 0.5))
-
-ggplot(data=mean.values53, aes(x=land.use, y=shannon53, fill=land.use)) +
-  geom_bar(stat="identity", position=position_dodge(), aes(x = factor(land.use, level = land.use)), width = .5, show.legend = FALSE)+
-  #scale_fill_brewer(palette="Paired")+ 
-  labs(title="Shannon diversity of soil fauna", x="Land Use Type", y = "Shannon index")+
-  theme(text=element_text(family="Arial")) + 
-  scale_fill_viridis(discrete=TRUE, option="viridis", begin = .3,end = .75,)+
-  theme_minimal()+ theme(plot.title = element_text(hjust = 0.5))
+```{r echo=FALSE}
+ggplot(invert_summary, aes(x=land_use, y=invert_mean_simpson, fill = land_use)) + 
+  geom_col(stat = "identity") + ggtitle("Soil invertebrate Simpson diversity") +
+  geom_errorbar(aes(ymin = invert_mean_simpson - sd_simpson,
+                    ymax = invert_mean_simpson + sd_simpson),
+                width = 0.1, linewidth = 1) +
+  scale_fill_viridis_d() + theme_minimal() +
+  labs(x = "Land Use", y = "Invert mean Simpson diversity") +
+  theme(legend.position="none")
 ```
 
-Interesting. Mature forest still lags behind natural regeneration.
 
-### Significance
-
-Let's run some ANOVAs
-
-#```{r, message = FALSE, warning = FALSE}
-
-### Richness
-anova.soil.taxa <- aov(taxa ~ land.use, data = data.summary)
-summary(anova.soil.taxa)
-
-### Abundance
-anova.soil.abundance <- aov(abundance ~ land.use, data = data.summary)
-summary(anova.soil.abundance)
-
-### Soil diversity
-anova.soil.diversity <- aov(shannon ~ land.use, data = data.summary)
-summary(anova.soil.diversity)
-```
 
 ### Individual taxa abundance
 
-Now going into the weeds a bit, let's see how land use affects diferent taxa. During my pilot testing some groups stood out as especially sensitive to land use, lets see if that holds.
+Now going into the weeds a bit, let's see how land use affects different taxa. During my pilot testing some groups stood out as especially sensitive to land use, lets see if that holds.
 
-Very unfortunately my soil temperature/moisture probe didn't work, and the new temperature probe I ordered broke shortly after starting soil collections. Consequently, soil moisture data is based on air dried samples weighed with a low-precision scale, and soil temperature values are only available for some of the samples. This is especially unfortunate because I strongly suspect that soil moisture and temperature mediate the effect of land use on soil invertebrates. Mature forests with a full canopy are likely to have more stable temperatures, lower daytime temperatures, and higher soil moisture than young forests or pastureland. Furthermore,the taxa that I found to be most sensitive to temperature during my research on BCI were most sensitive to land use in Azuero.
 
 <details markdown="1">
 <summary><strong>Click here</strong> for setup code </summary>

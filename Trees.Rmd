@@ -252,7 +252,7 @@ tree_summary <- tree_data %>%
 
 ### Visualization
 
-Now for some simple plots to look at the relationship between these various composition and structural indicators and land use.
+Now some simple plots to look at the relationship between these various composition and structural indicators and land use.
 
 
 ```{r echo=FALSE}
