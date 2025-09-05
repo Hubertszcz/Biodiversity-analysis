@@ -16,17 +16,19 @@ It's hard to imagine conducting a monitoring campaign to assess the success of r
 Three CSV files are needed for the initial data cleanup and analysis:
 
 ```{r echo=FALSE}
-#xfun::embed_file('media/data/ETH dry season deployments AZ001-053.csv')
+xfun::embed_file('media/data/ETH dry season deployments AZ001-053.csv')
 ```  
 
 
 ```{r echo=FALSE}
-#xfun::embed_file('media/data/ETH tree data AZ001-053.csv')
+xfun::embed_file('media/data/ETH tree data AZ001-053.csv')
 ```  
 
 ```{r echo=FALSE}
-#xfun::embed_file('media/data/ETH tree metadata AZ001-053.csv')
+xfun::embed_file('media/data/ETH tree metadata AZ001-053.csv')
 ```  
+
+#
 
 Setting up the environment and initial cleanup:
 
@@ -64,7 +66,7 @@ data <- data[complete.cases(data$name), ]
 #I need to include a step in cleanup to filter out lianas, which are currently included with trees if they have woody stems.
 #this starts with compiling a species list of lianas and matching it against my tree species list
 ```
-
+</details>
 
 I want to get several values from this analysis for each sampling point, namely tree abundance, species richness, and diversity indices (Shannon, Simpson, etc.). Acknowledging that these long and skinny plots are not the best method of measuring these structural indicators, I will also pull out data on stem density, basal area, and quadratic mean diameter. A mix of compositional and structural indicators is required for biodiversity crediting systems like Verra's SD VISta methodology. 
 
@@ -72,9 +74,8 @@ I want to get several values from this analysis for each sampling point, namely 
 
 #### Abundance (individuals, not stems)
 
-<details markdown="1">
-<summary><strong>Click here</strong> for code </summary>
-```{r, message=FALSE, results = 'hide'}
+
+```{r, results = 'hide'}
 #removing extra stems (so one per individual)
 data2 <- subset(data, stem == "1",)
 
@@ -92,13 +93,11 @@ total_tree_abundance <- data_counted %>%
   arrange(point)
 ```
 
-#Richness and diversity indicators
+#### Richness and diversity indices
 
 The vegan package in R makes it easy to calculate all of these at once:
 
-<details markdown="1">
-<summary><strong>Click here</strong> for code </summary>
-```{r, message=FALSE, results = 'hide'}
+```{r, results = 'hide'}
 #calculating frequency
 data3 <- data2 %>%
   group_by(point, name) %>%
@@ -124,9 +123,7 @@ tree_simpson<- diversity(data_counts, "simpson")    #Simpson diversity index
 
 #### stem density
 
-<details markdown="1">
-<summary><strong>Click here</strong> for code </summary>
-```{r, message=FALSE, results = 'hide'}
+```{r, results = 'hide'}
 data$newCol <- 1
 
 stem_density <- data %>%
@@ -140,9 +137,8 @@ stem_density$stem_density <- stem_density$stem_density*100     #treating the 2x5
 
 #### mean basal area
 
-<details markdown="1">
-<summary><strong>Click here</strong> for code </summary>
-```{r, message=FALSE, results = 'hide'}
+
+```{r, results = 'hide'}
 data$area <- (pi*((data$dbh)/2)**2)/10000   #calculate area from diameter, then convert from sq cm to sq meters
 
 #mean basal area per transect
@@ -158,9 +154,7 @@ mean_basal_area$mean_basal_area <- mean_basal_area$mean_basal_area*100     #trea
 
 #### quadratic mean diameter
 
-<details markdown="1">
-<summary><strong>Click here</strong> for code </summary>
-```{r, message=FALSE, results = 'hide'}
+```{r, results = 'hide'}
 quadratic_mean_diameter <- data %>%
   group_by(point) %>%
   summarise(
@@ -172,8 +166,6 @@ quadratic_mean_diameter <- data %>%
 
 At one point we discussed this as a structural indicator that would change predicatbly after reforestation. Stem density alone is likely to initially increase as shrubby and early successional species take over ex-pastureland, then decrease as the forest ages.
 
-<details markdown="1">
-<summary><strong>Click here</strong> for code </summary>
-```{r, message=FALSE, results = 'hide'}
+```{r, results = 'hide'}
 MBA_SD <- mean_basal_area$mean_basal_area/stem_density$stem_density
 ```
