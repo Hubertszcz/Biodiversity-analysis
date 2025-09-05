@@ -9,7 +9,7 @@ output:
       css: styles.css
 ---
 
-Here are some figures I generated with a different datasets (primarily Ponterra Points PON001-100). I'll get this updated eventually to be consistent with the sample dataset.
+NOTE: Here are some older figures I generated with different datasets (primarily Ponterra Points PON001-100). I'll get this updated to match code in other tabs and a consistent subset of data.
 
 ### Mammals
 

@@ -1,0 +1,11 @@
+point,gentry_transect,date,site,direction,end.lat,end.long,crew1,crew2,crew3,crew4,crew5,notes
+AZ001,AZGEN001,20240812,Achotines,West,7.41437,-80.16986,JS,JV,,,,"Se tomo el W, porque N-S estaba el riachuelo. Bosque secundario dominado por liana Bignonia, sin herbaceae"
+AZ002,AZGEN002,20240812,Achotines,North,7.41529,-80.1672,JS,JV,,,,"Parte del transecto esta en un sendero (metro 18 al 23), bosque secundario dominante de liana Bignonia, sin herbaceas. Dominancia arborea de Tabebuia rosea y Handroanthus guayacan."
+AZ003,AZGEN003,20240812,Achotines,North,7.41521,-80.16452,JS,JV,,,,"Bosque secundario dominado por la liana Bignonia, sin herbaceas. Dominancia arborea de Tabebuia rosea y Calycophyllum candidissimum, nos desviamos 10 grados al E por presencia de abejas africanas, se forma un riachuelo efimero al llover."
+AZ004,AZGEN004,,,,,,,,,,,
+AZ005,AZGEN005,,,,,,,,,,,
+AZ006,AZGEN006,,,,,,,,,,,
+AZ007,AZGEN007,,,,,,,,,,,
+AZ008,AZGEN008,,,,,,,,,,,
+AZ009,AZGEN009,,,,,,,,,,,
+AZ010,AZGEN010,20240814,Vernom,North,7.42043,-80.1647,JS,JV,,,,"Pastizal, dominancia arborea de Handroanthus guayacan y Guazuma ulmifolia."
