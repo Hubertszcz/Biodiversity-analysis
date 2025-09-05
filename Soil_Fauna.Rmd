@@ -9,39 +9,11 @@ output:
 ---
 
 ![](media/gallery/Cricket.jpg)
-**BASED ON OLD SYSTEM, NEED TO UPDATE**
-
-Killed all the R scripts with # so that I could still render the markdown in the meantime.
-
-
-#
-#
-#
-#
-#
-#
-#
 
 Soil invertebrates are incredibly diverse. To put things in perspective: Perching birds (this includes more than half of all bird species worldwide) are in the single order Passeriformes. A single soil sample from a mature forest can contain more than twenty different *orders* of animals! Most soil organisms in the tropics are undescribed species - if you look at a sample under the microscope you are likely to be the first human to ever lay eyes on at least a few species. These tiny creature also play a critical role in the carbon cycle, contributing to decomposition of plant material and cycling nutrients in the soil.
 
 
 Important for the context of holistic biodiversity monitoring, soil fauna are very location-specific. A mammal observation at a particular point does not necessarily give too much information about the quality of habitat at that point for the mammal - the mammal could just be passing through between places that it actually eats, sleeps and mates. On the other hand, soil fauna have vastly smaller home ranges, and in all likelihood spend their entire lives within a few meters of the sampling point. So, in a patchy landscape with a lot of disturbance they are better indicators of conditions at a particular sampling point.
-
-
-Brief summary of what I will be doing with my soil invert data:
-
-- Clean up and prepare for vegan R package
-
-- Calculate invertebrate richness at each sampling point, as well as abundance of all taxa across points and land use types
-
-- Calculate Shannon, Simpson and other diversity indices for each land use type
-
-- Run some ordinations to look at community composition differences between land use types.
-
-- Visualize abundance for all orders in relation to land use to see which are most sensitive. 
-
-- If I have enough temperature data from this first round of sampling see if temperature mediates invertebrate response to land use (I suspect it does). The moisture data is unfortunately pretty low resolution, but that probably also plays a very important role. 
-
 
 ### Data cleanup 
 
