@@ -7,7 +7,7 @@ output:
       toc: true
       toc_depth: 3
 ---
-NOTE: I severely educed the sample dataset because I saw a suspicious amount of Github repo clones and don't want the data everywhere. I will remake figures locally using a larger subset of data and upload them as files.
+NOTE: I severely reduced the sample dataset because I saw a suspicious amount of Github repo clones and don't want the data everywhere. I will remake figures locally using a larger subset of data and upload them as files.
 
 
 Each sampling point had two bird point counts, on consecutive days. The point counts were conducted starting 15 minutes before sunrise, and 

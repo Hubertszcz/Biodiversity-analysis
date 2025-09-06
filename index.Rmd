@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = FALSE)
 # https://rstudio.github.io/distill/publish_website.html#github-pages
 
 ```
-NOTE: I severely educed the sample dataset because I saw a suspicious amount of Github repo clones and don't want the data everywhere. I will remake figures locally using a larger subset of data and upload them as files.
+NOTE: I severely reduced the sample dataset because I saw a suspicious amount of Github repo clones and don't want the data everywhere. I will remake figures locally using a larger subset of data and upload them as files.
 
 
 ## Overview
